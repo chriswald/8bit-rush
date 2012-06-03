@@ -9,45 +9,78 @@ import javax.swing.JFrame;
 
 class Camera extends JFrame{
 	private static final long serialVersionUID = 1L;
-	private BufferedImage todraw;
-	private BufferedImage buffer;
-	private Level lev;
-	private ArrayList<Artifact> artifacts;
+	private static int ID = 0;
 	
-	private int posx = 0;
-	private int posy = 0;
+	private final String TODRAWid = "camera" + ID + ".todraw";
+	private final String BUFFERid = "camera" + ID + ".buffer";
+	private final String LEVid= "camera" + ID + ".lev";
+	private final String ARTIFACTSid = "camera" + ID + ".artifacts";
+	private final String POSXid = "camera" + ID + ".posx";
+	private final String POSYid = "camera" + ID + ".posy";
+	
+	public int todraw;
+	public int buffer;
+	public int lev;
+	public int artifacts;
+	public int posx;
+	public int posy;
 	
 	public Camera() {
+		ID ++;
 		int sw = Toolkit.getDefaultToolkit().getScreenSize().width;
 		int sh = Toolkit.getDefaultToolkit().getScreenSize().height;
-		todraw = new BufferedImage(sw, sh, BufferedImage.TYPE_INT_ARGB);
+		
+		todraw = GameLoop.db.getint(TODRAWid, new BufferedImage(sw, sh, BufferedImage.TYPE_INT_ARGB));
+		artifacts = GameLoop.db.getint(ARTIFACTSid, new ArrayList<Artifact>(0));
+		posx = GameLoop.db.getint(POSXid, 0);
+		posy = GameLoop.db.getint(POSYid, 0);
 	}
 	
 	public void setLevel(Level l) {
-		this.lev = l;
-		buffer = new BufferedImage(this.lev.width(), this.lev.height(), BufferedImage.TYPE_INT_ARGB);
+		lev = GameLoop.db.getint(LEVid, l);
+		buffer = GameLoop.db.getint(BUFFERid, new BufferedImage(l.width(), l.height(), BufferedImage.TYPE_INT_ARGB));
+		
 	}
 	
 	public void addArtifact(Artifact a) {
-		artifacts.add(a);
+		@SuppressWarnings("unchecked")
+		ArrayList<Artifact> list = (ArrayList<Artifact>) GameLoop.db.get(artifacts);
+		list.add(a);
+		GameLoop.db.set(artifacts, list);
 	}
 	
 	public void addArtifact(CameraDrawable c) {
-		artifacts.addAll(c.getArtifacts());
+		@SuppressWarnings("unchecked")
+		ArrayList<Artifact> list = (ArrayList<Artifact>) GameLoop.db.get(artifacts);
+		list.addAll(c.getArtifacts());
+		GameLoop.db.set(artifacts, list);
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void preparetodraw() {
-		Graphics gbuf = buffer.getGraphics();
-		Graphics gtod = todraw.getGraphics();
-		for (Artifact a : artifacts) {
-			gbuf.drawImage(a.img, a.x, a.y, null);
+		BufferedImage buf = (BufferedImage) GameLoop.db.get(buffer);
+		BufferedImage tod = (BufferedImage) GameLoop.db.get(todraw);
+		ArrayList<Artifact> list = (ArrayList<Artifact>) GameLoop.db.get(artifacts);
+		
+		Graphics gbuf = buf.getGraphics();
+		Graphics gtod = tod.getGraphics();
+		for (Artifact a : list) {
+			gbuf.drawImage(a.img(), a.x(), a.y(), null);
 		}
 		
-		gtod.drawImage(buffer, 0, 0, todraw.getWidth(), todraw.getHeight(), posx, posy, todraw.getWidth(), todraw.getHeight(), null);
+		gtod.drawImage(buf, 0, 0, tod.getWidth(), tod.getHeight(), posx, posy, tod.getWidth(), tod.getHeight(), null);
+		
+		GameLoop.db.set(buffer, buf);
+		GameLoop.db.set(todraw, tod);
 	}
 	
 	public void paint(Graphics g) {
 		preparetodraw();
-		g.drawImage(todraw, 0, 0, null);
+		
+		BufferedImage tod = (BufferedImage) GameLoop.db.get(todraw);
+		
+		g.drawImage(tod, 0, 0, null);
+		
+		GameLoop.db.set(todraw, tod);
 	}
 }

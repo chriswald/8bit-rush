@@ -2,14 +2,14 @@ package pkg;
 
 public class Key {
 	public String name;
-	public String value;
+	public Object value;
 	
 	public Key() {
 		this.name = "unnamed";
 		this.value = "null";
 	}
 	
-	public Key(String name, String value) {
+	public Key(String name, Object value) {
 		this.name = name;
 		this.value = value;
 	}
