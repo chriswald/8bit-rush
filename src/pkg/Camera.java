@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 class Camera extends JFrame{
 	private static final long serialVersionUID = 1L;
 	private static int ID = 0;
+	private static Database db = new Database();
 	
 	private final String TODRAWid = "camera" + ID + ".todraw";
 	private final String BUFFERid = "camera" + ID + ".buffer";
@@ -30,37 +31,37 @@ class Camera extends JFrame{
 		int sw = Toolkit.getDefaultToolkit().getScreenSize().width;
 		int sh = Toolkit.getDefaultToolkit().getScreenSize().height;
 		
-		todraw = GameLoop.db.getint(TODRAWid, new BufferedImage(sw, sh, BufferedImage.TYPE_INT_ARGB));
-		artifacts = GameLoop.db.getint(ARTIFACTSid, new ArrayList<Artifact>(0));
-		posx = GameLoop.db.getint(POSXid, 0);
-		posy = GameLoop.db.getint(POSYid, 0);
+		todraw = db.getint(TODRAWid, new BufferedImage(sw, sh, BufferedImage.TYPE_INT_ARGB));
+		artifacts = db.getint(ARTIFACTSid, new ArrayList<Artifact>(0));
+		posx = db.getint(POSXid, 0);
+		posy = db.getint(POSYid, 0);
 	}
 	
 	public void setLevel(Level l) {
-		lev = GameLoop.db.getint(LEVid, l);
-		buffer = GameLoop.db.getint(BUFFERid, new BufferedImage(l.width(), l.height(), BufferedImage.TYPE_INT_ARGB));
+		lev = db.getint(LEVid, l);
+		buffer = db.getint(BUFFERid, new BufferedImage(l.width(), l.height(), BufferedImage.TYPE_INT_ARGB));
 		
 	}
 	
 	public void addArtifact(Artifact a) {
 		@SuppressWarnings("unchecked")
-		ArrayList<Artifact> list = (ArrayList<Artifact>) GameLoop.db.get(artifacts);
+		ArrayList<Artifact> list = (ArrayList<Artifact>) db.get(artifacts);
 		list.add(a);
-		GameLoop.db.set(artifacts, list);
+		db.set(artifacts, list);
 	}
 	
 	public void addArtifact(CameraDrawable c) {
 		@SuppressWarnings("unchecked")
-		ArrayList<Artifact> list = (ArrayList<Artifact>) GameLoop.db.get(artifacts);
+		ArrayList<Artifact> list = (ArrayList<Artifact>) db.get(artifacts);
 		list.addAll(c.getArtifacts());
-		GameLoop.db.set(artifacts, list);
+		db.set(artifacts, list);
 	}
 	
 	@SuppressWarnings("unchecked")
 	private void preparetodraw() {
-		BufferedImage buf = (BufferedImage) GameLoop.db.get(buffer);
-		BufferedImage tod = (BufferedImage) GameLoop.db.get(todraw);
-		ArrayList<Artifact> list = (ArrayList<Artifact>) GameLoop.db.get(artifacts);
+		BufferedImage buf = (BufferedImage) db.get(buffer);
+		BufferedImage tod = (BufferedImage) db.get(todraw);
+		ArrayList<Artifact> list = (ArrayList<Artifact>) db.get(artifacts);
 		
 		Graphics gbuf = buf.getGraphics();
 		Graphics gtod = tod.getGraphics();
@@ -70,17 +71,17 @@ class Camera extends JFrame{
 		
 		gtod.drawImage(buf, 0, 0, tod.getWidth(), tod.getHeight(), posx, posy, tod.getWidth(), tod.getHeight(), null);
 		
-		GameLoop.db.set(buffer, buf);
-		GameLoop.db.set(todraw, tod);
+		db.set(buffer, buf);
+		db.set(todraw, tod);
 	}
 	
 	public void paint(Graphics g) {
 		preparetodraw();
 		
-		BufferedImage tod = (BufferedImage) GameLoop.db.get(todraw);
+		BufferedImage tod = (BufferedImage) db.get(todraw);
 		
 		g.drawImage(tod, 0, 0, null);
 		
-		GameLoop.db.set(todraw, tod);
+		db.set(todraw, tod);
 	}
 }

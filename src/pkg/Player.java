@@ -11,6 +11,8 @@ import javax.swing.JOptionPane;
 
 public class Player implements KeyListener, CameraDrawable{
 	private static int ID = 0;
+	private static Database db = new Database();
+	
 	private final String UPid = "player" + ID + ".up";
 	private final String RIGHTid = "player" + ID + ".right";
 	private final String DOWNid = "player" + ID + ".down";
@@ -24,24 +26,24 @@ public class Player implements KeyListener, CameraDrawable{
 	
 	public Player() {
 		ID ++;
-		up = GameLoop.db.add(UPid, false);
-		right = GameLoop.db.add(RIGHTid, false);
-		down = GameLoop.db.add(DOWNid, false);
-		left = GameLoop.db.add(LEFTid, false);
-		imgfile = GameLoop.db.getint(IMGFILEid, "player.jpg");
-		posx = GameLoop.db.add(POSXid, 0);
-		posy = GameLoop.db.add(POSYid, 0);
+		up = db.add(UPid, false);
+		right = db.add(RIGHTid, false);
+		down = db.add(DOWNid, false);
+		left = db.add(LEFTid, false);
+		imgfile = db.getint(IMGFILEid, "player.jpg");
+		posx = db.add(POSXid, 0);
+		posy = db.add(POSYid, 0);
 		
-		if (!GameLoop.db.has(IMGid))
+		if (!db.has(IMGid))
 			loadImage();
 		else
-			img = GameLoop.db.find(IMGid);
+			img = db.find(IMGid);
 	}
 	
 	private void loadImage() {
-		String filename = (String) GameLoop.db.get(GameLoop.resourcedir) + (String) GameLoop.db.get(GameLoop.imagedir) + (String) GameLoop.db.get(imgfile);
+		String filename = (String) db.get(GameLoop.resourcedir) + (String) db.get(GameLoop.imagedir) + (String) db.get(imgfile);
 		try {
-			img = GameLoop.db.add(IMGid, ImageIO.read(new File(filename)));
+			img = db.add(IMGid, ImageIO.read(new File(filename)));
 		} catch (IOException e) {
 			System.err.println(e.getLocalizedMessage());
 			JOptionPane.showMessageDialog(null, "Cannot load the image file for the player.\n" + filename);
