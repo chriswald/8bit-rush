@@ -1,24 +1,23 @@
 package pkg;
 
-class GameLoop {
-	private static final String RESOURCEDIRid = "gameloop.resourcedir";
-	private static final String IMAGEDIRid = "gameloop.imagedir";
-	private static final String SOUNDDIRid = "gameloop.sounddir";
-	private static final String LEVELDIRid = "gameloop.leveldir";
+class GameLoop {	
+	public static String RESDIR = "res/";
+	public static String IMGDIR = "img/";
+	public static String SNDDIR = "snd/";
+	public static String LVLDIR = "lvl/";
 	
-	public static int resourcedir;
-	public static int imagedir;
-	public static int sounddir;
-	public static int leveldir;
-	
-	public static Database db;
-	
-	public static void main(String[] args) {
-		db = new Database();
+	public static void main(String[] args) {		
+		Camera c = new Camera();
+		Level  l = new Level(1600, 900);
+		Player p = new Player();
 		
-		resourcedir = db.getint(RESOURCEDIRid, "res/");
-		imagedir = db.getint(IMAGEDIRid, "img/");
-		sounddir = db.getint(SOUNDDIRid, "snd/");
-		leveldir = db.getint(LEVELDIRid, "lvl/");
+		c.setLevel(l);
+		
+		c.setVisible(true);
+		
+		while (true) {
+			p.update();
+			c.addArtifact(p);
+		}
 	}
 }
