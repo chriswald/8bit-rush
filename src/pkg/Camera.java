@@ -15,18 +15,16 @@ class Camera extends JFrame implements KeyListener{
 	public BufferedImage todraw;
 	public BufferedImage buffer;
 	public Level lvl;
-	public ArrayList<Artifact> artifacts;
+	public ArrayList<CameraDrawable> drawables;
 	public int posx;
 	public int posy;
-	
-	private boolean accessing = false;
 	
 	public Camera() {
 		int sw = Toolkit.getDefaultToolkit().getScreenSize().width;
 		int sh = Toolkit.getDefaultToolkit().getScreenSize().height;
 		
 		todraw = new BufferedImage(sw, sh, BufferedImage.TYPE_INT_ARGB);
-		artifacts = new ArrayList<Artifact>(0);
+		drawables = new ArrayList<CameraDrawable>(0);
 		posx = 0;
 		posy = 0;
 		
@@ -40,27 +38,19 @@ class Camera extends JFrame implements KeyListener{
 		buffer = new BufferedImage(l.width, l.height, BufferedImage.TYPE_INT_ARGB);
 	}
 	
-	public void addArtifact(Artifact a) {
-		in();
-		artifacts.add(a);
-		out();
-	}
-	
-	public void addArtifact(CameraDrawable c) {
-		in();
-		artifacts.addAll(c.getArtifacts());
-		out();
+	public void addDrawable(CameraDrawable a) {
+		drawables.add(a);
 	}
 	
 	private void preparetodraw() {		
 		Graphics gbuf = buffer.getGraphics();
 		Graphics gtod = todraw.getGraphics();
 		
-		in();
-		for (Artifact a : artifacts) {
-			gbuf.drawImage(a.img, a.x, a.y, null);
+		for (CameraDrawable c : drawables) {
+			for (Artifact a : c.getArtifacts()) {
+				gbuf.drawImage(a.img, a.x, a.y, null);
+			}
 		}
-		out();
 		
 		gtod.drawImage(buffer, 0, 0, todraw.getWidth(), todraw.getHeight(), posx, posy, todraw.getWidth(), todraw.getHeight(), null);
 	}
@@ -91,21 +81,5 @@ class Camera extends JFrame implements KeyListener{
 	public void keyTyped(KeyEvent arg0) {
 		// TODO Auto-generated method stub
 		
-	}
-	
-	private synchronized void in() {
-		while (accessing) {
-			try {
-				this.wait();
-			} catch (InterruptedException e) {
-				System.err.println(e.getLocalizedMessage());
-			}
-		}
-		
-		accessing = true;
-	}
-	
-	private synchronized void out() {
-		accessing = false;
 	}
 }

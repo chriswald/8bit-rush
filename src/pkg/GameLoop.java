@@ -12,12 +12,14 @@ class GameLoop {
 		Player p = new Player();
 		
 		c.setLevel(l);
+		c.addDrawable(p);
+		c.addKeyListener(p);
 		
 		c.setVisible(true);
 		
 		while (true) {
 			p.update();
-			c.addArtifact(p);
+			c.repaint();
 		}
 	}
 }

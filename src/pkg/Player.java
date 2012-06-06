@@ -13,22 +13,16 @@ import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
 public class Player implements KeyListener, CameraDrawable{	
-	/*private final String UPid = "player" + ID + ".up";
-	private final String RIGHTid = "player" + ID + ".right";
-	private final String DOWNid = "player" + ID + ".down";
-	private final String LEFTid = "player" + ID + ".left";
-	private final String SPACEid = "player" + ID + ".space";
-	private final String IMGid = "player" + ID + ".img";
-	private final String IMGFILEid = "player" + ID + ".imgfile";
-	private final String POSXid = "player" + ID + ".posx";
-	private final String POSYid = "player" + ID + ".posy";
-	
-	public int up, right, down, left, space, img, imgfile, posx, posy;*/
 	public boolean up = false;
 	public boolean right = false;
 	public boolean down = false;
 	public boolean left = false;
 	public boolean space = false;
+	
+	public boolean rightwall = false;
+	public boolean leftwall = false;
+	public boolean ground = false;
+	public boolean ceiling = false;
 	
 	public BufferedImage img;
 	
@@ -70,6 +64,50 @@ public class Player implements KeyListener, CameraDrawable{
 		if (left) {
 			changevelx(-1);
 		}
+		
+		move();
+	}
+	
+	private void checkbounds() {
+		if (posx <= 0) {
+			leftwall = true;
+			velx = 0;
+		}
+		else {
+			leftwall = false;
+		}
+		
+		if (posx >= 1600 - img.getWidth()) { 
+			rightwall = true;
+			velx = 0;
+		}
+		else {
+			rightwall = false;
+		}
+		
+		if (posy >= 900 - img.getHeight()) {
+			ground = true;
+			vely = 0;
+		}
+		else {
+			ground = false;
+		}
+	}
+	
+	private void move() {
+		posx += velx;
+		posy += vely;
+		
+		checkbounds();
+		
+		if (leftwall)
+			posx = 0;
+		if (rightwall)
+			posx = 1600-img.getWidth();
+		if (ground)
+			posy = 900-img.getHeight();
+		else
+			vely -= .5;
 	}
 	
 	private void changevelx(double delta) {
@@ -90,6 +128,7 @@ public class Player implements KeyListener, CameraDrawable{
 		case KeyEvent.VK_RIGHT:
 			right = true;
 			left = false;
+			System.out.println("R");
 			break;
 		case KeyEvent.VK_DOWN:
 			down = true;
@@ -98,6 +137,7 @@ public class Player implements KeyListener, CameraDrawable{
 		case KeyEvent.VK_LEFT:
 			left = true;
 			right = false;
+			System.out.println("L");
 			break;
 		case KeyEvent.VK_SPACE:
 			space = true;
