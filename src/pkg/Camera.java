@@ -35,13 +35,11 @@ class Camera extends JFrame implements KeyListener{
 	
 	public void setLevel(Level l) {
 		lvl = l;
-		buffer = new BufferedImage(l.width, l.height, BufferedImage.TYPE_INT_ARGB);
+		buffer = new BufferedImage(l.widthpx, l.heightpx, BufferedImage.TYPE_INT_ARGB);
 	}
 	
 	public void addDrawable(CameraDrawable a) {
 		drawables.add(a);
-		for (CameraDrawable c : drawables)
-			System.out.println(c.toString());
 	}
 	
 	private void preparetodraw() {		

@@ -1,0 +1,8 @@
+! 32 18
+@ block.jpg 1 10 1011
+@ block.jpg 2 10 1010
+@ block.jpg 3 10 1011
+@ block.jpg 4 11 1100
+@ block.jpg 4 12 0111
+@ block.jpg 5 11 1110
+@ block.jpg 6 12 1111

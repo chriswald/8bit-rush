@@ -8,7 +8,7 @@ class GameLoop {
 	
 	public static void main(String[] args) {		
 		Camera c = new Camera();
-		Level  l = new Level(1600, 900);
+		Level  l = new Level("lvl1.txt");
 		Player p = new Player();
 		
 		c.setLevel(l);
@@ -19,6 +19,7 @@ class GameLoop {
 		c.setVisible(true);
 		
 		while (true) {
+			l.checkCollide(p);
 			p.update();
 			c.repaint();
 			

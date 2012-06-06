@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
-public class Player implements KeyListener, CameraDrawable{	
+public class Player extends Collider implements KeyListener, CameraDrawable{	
 	public boolean up = false;
 	public boolean right = false;
 	public boolean down = false;
@@ -26,10 +26,8 @@ public class Player implements KeyListener, CameraDrawable{
 	
 	public BufferedImage img;
 	
-	public int posx = 0;
-	public int posy = 0;
-	public double velx = 0;
-	public double vely = 0;
+	public static final int MAXGROUNDSPEED = 5;
+	public static final int MAXAIRSPEED = 4;
 	
 	public String imgfile = "player.jpg";
 	
@@ -49,6 +47,8 @@ public class Player implements KeyListener, CameraDrawable{
 		}
 		
 		img = tmp;
+		width = img.getWidth();
+		height = img.getHeight();
 	}
 	
 	private void drawPlayer(BufferedImage img) {
@@ -68,34 +68,42 @@ public class Player implements KeyListener, CameraDrawable{
 		if (space) {
 			if (!ground) {
 				if (rightwall) {
-					velx = -10;
+					velx = -5;
 					vely = -7;
 				}
 				if (leftwall) {
-					velx = 10;
+					velx = 5;
 					vely = -7;
 				}
 			} else {
-				vely = -9;
+				vely = -7;
 			}
 		}
 	}
 	
 	private void handlerunning() {
 		if (right) {
-			changevelx(1);
+			if (ground) {
+				if (velx < MAXGROUNDSPEED) {
+					velx += .5;
+				}
+			} else {
+				if (velx < MAXAIRSPEED) {
+					velx += .5;
+				}
+			}
 		}
-		else if (left) {
-			changevelx(-1);
-		}
-		else {
-			if (ground)
-				velx = 0;
-			else
-				if (velx > 0)
-					velx -= 1;
-				else if (velx < 0)
-					velx += 1;
+		
+		if (left) {
+			if (ground) {
+				if (velx > -MAXGROUNDSPEED) {
+					velx -= .5;
+				}
+			} else {
+				if (velx > -MAXAIRSPEED) {
+					velx -= .5;
+				}
+			}
 		}
 	}
 	
@@ -136,24 +144,36 @@ public class Player implements KeyListener, CameraDrawable{
 		
 		if (ground)
 			posy = 900-img.getHeight();
+			//vely = 0;
 		else
-			if (rightwall || leftwall)
-				vely += .25;
+			if (rightwall || leftwall)    //Slide down walls more slowly than through free space
+				vely += .1;
 			else
 				vely += .5;
 	}
 	
-	private void changevelx(double delta) {
-		if (velx > -5 || velx < 5)
-			velx += delta;
-		
-		/*velx += delta;
-		if (ground) {
-			if (velx < -5)
-				velx = -5;
-			if (velx > 5)
-				velx = 5;
-		}*/
+	public void startMoveRight() {
+		if (!right) 
+			velx = 0;
+		right = true;
+		left = false;
+	}
+	
+	public void endMoveRight() {
+		velx = 0;
+		right = false;
+	}
+	
+	public void startMoveLeft() {
+		if (!left)
+			velx = 0;
+		left = true;
+		right = false;
+	}
+	
+	public void endMoveLeft() {
+		velx = 0;
+		left = false;
 	}
 	
 	@Override
@@ -164,16 +184,14 @@ public class Player implements KeyListener, CameraDrawable{
 			down = false;
 			break;
 		case KeyEvent.VK_D:
-			right = true;
-			left = false;
+			startMoveRight();
 			break;
 		case KeyEvent.VK_S:
 			down = true;
 			up = false;
 			break;
 		case KeyEvent.VK_A:
-			left = true;
-			right = false;
+			startMoveLeft();
 			break;
 		case KeyEvent.VK_SPACE:
 			space = true;
@@ -188,13 +206,13 @@ public class Player implements KeyListener, CameraDrawable{
 			up = false;
 			break;
 		case KeyEvent.VK_D:
-			right = false;
+			endMoveRight();
 			break;
 		case KeyEvent.VK_S:
 			down = false;
 			break;
 		case KeyEvent.VK_A:
-			left = false;
+			endMoveLeft();
 			break;
 		case KeyEvent.VK_SPACE:
 			space = false;
@@ -213,13 +231,34 @@ public class Player implements KeyListener, CameraDrawable{
 	@Override
 	public ArrayList<Artifact> getArtifacts() {		
 		ArrayList<Artifact> list = new ArrayList<Artifact>(1);
-		list.add(new Artifact(posx, posy, img));
+		list.add(new Artifact((int) posx, (int) posy, img));
 		
 		return list;
 	}
 	
 	public String toString() {
 		return this.getClass() + " " + img.getWidth() + " " + img.getHeight();
+	}
+
+	@Override
+	protected void onCollide(CollidedSide side, Collider c) {
+		switch (side) {
+		case RIGHT:
+			rightwall = true;
+			velx = 0;
+			break;
+		case LEFT:
+			leftwall = true;
+			velx = 0;
+			break;
+		case BOTTOM:
+			ground = true;
+			vely = 0;
+			break;
+		case TOP:
+			ceiling = true;
+			break;
+		}
 	}
 
 }
