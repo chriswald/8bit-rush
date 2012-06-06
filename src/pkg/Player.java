@@ -58,20 +58,50 @@ public class Player implements KeyListener, CameraDrawable{
 	}
 	
 	public void update() {
+		handlejumping();
+		handlerunning();
+
+		move();
+	}
+	
+	private void handlejumping() {
+		if (space) {
+			if (!ground) {
+				if (rightwall) {
+					velx = -10;
+					vely = -7;
+				}
+				if (leftwall) {
+					velx = 10;
+					vely = -7;
+				}
+			} else {
+				vely = -9;
+			}
+		}
+	}
+	
+	private void handlerunning() {
 		if (right) {
 			changevelx(1);
 		}
-		if (left) {
+		else if (left) {
 			changevelx(-1);
 		}
-		
-		move();
+		else {
+			if (ground)
+				velx = 0;
+			else
+				if (velx > 0)
+					velx -= 1;
+				else if (velx < 0)
+					velx += 1;
+		}
 	}
 	
 	private void checkbounds() {
 		if (posx <= 0) {
 			leftwall = true;
-			velx = 0;
 		}
 		else {
 			leftwall = false;
@@ -79,7 +109,6 @@ public class Player implements KeyListener, CameraDrawable{
 		
 		if (posx >= 1600 - img.getWidth()) { 
 			rightwall = true;
-			velx = 0;
 		}
 		else {
 			rightwall = false;
@@ -87,7 +116,6 @@ public class Player implements KeyListener, CameraDrawable{
 		
 		if (posy >= 900 - img.getHeight()) {
 			ground = true;
-			vely = 0;
 		}
 		else {
 			ground = false;
@@ -102,42 +130,50 @@ public class Player implements KeyListener, CameraDrawable{
 		
 		if (leftwall)
 			posx = 0;
+		
 		if (rightwall)
 			posx = 1600-img.getWidth();
+		
 		if (ground)
 			posy = 900-img.getHeight();
 		else
-			vely -= .5;
+			if (rightwall || leftwall)
+				vely += .25;
+			else
+				vely += .5;
 	}
 	
 	private void changevelx(double delta) {
-		velx += delta;
-		if (velx < -5)
-			velx = -5;
-		if (velx > 5)
-			velx = 5;
+		if (velx > -5 || velx < 5)
+			velx += delta;
+		
+		/*velx += delta;
+		if (ground) {
+			if (velx < -5)
+				velx = -5;
+			if (velx > 5)
+				velx = 5;
+		}*/
 	}
 	
 	@Override
 	public void keyPressed(KeyEvent evt) {
 		switch (evt.getKeyCode()) {
-		case KeyEvent.VK_UP:
+		case KeyEvent.VK_W:
 			up = true;
 			down = false;
 			break;
-		case KeyEvent.VK_RIGHT:
+		case KeyEvent.VK_D:
 			right = true;
 			left = false;
-			System.out.println("R");
 			break;
-		case KeyEvent.VK_DOWN:
+		case KeyEvent.VK_S:
 			down = true;
 			up = false;
 			break;
-		case KeyEvent.VK_LEFT:
+		case KeyEvent.VK_A:
 			left = true;
 			right = false;
-			System.out.println("L");
 			break;
 		case KeyEvent.VK_SPACE:
 			space = true;
@@ -148,16 +184,16 @@ public class Player implements KeyListener, CameraDrawable{
 	@Override
 	public void keyReleased(KeyEvent evt) {
 		switch (evt.getKeyCode()) {
-		case KeyEvent.VK_UP:
+		case KeyEvent.VK_W:
 			up = false;
 			break;
-		case KeyEvent.VK_RIGHT:
+		case KeyEvent.VK_D:
 			right = false;
 			break;
-		case KeyEvent.VK_DOWN:
+		case KeyEvent.VK_S:
 			down = false;
 			break;
-		case KeyEvent.VK_LEFT:
+		case KeyEvent.VK_A:
 			left = false;
 			break;
 		case KeyEvent.VK_SPACE:
@@ -180,6 +216,10 @@ public class Player implements KeyListener, CameraDrawable{
 		list.add(new Artifact(posx, posy, img));
 		
 		return list;
+	}
+	
+	public String toString() {
+		return this.getClass() + " " + img.getWidth() + " " + img.getHeight();
 	}
 
 }

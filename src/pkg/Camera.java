@@ -40,6 +40,8 @@ class Camera extends JFrame implements KeyListener{
 	
 	public void addDrawable(CameraDrawable a) {
 		drawables.add(a);
+		for (CameraDrawable c : drawables)
+			System.out.println(c.toString());
 	}
 	
 	private void preparetodraw() {		

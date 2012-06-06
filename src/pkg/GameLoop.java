@@ -12,6 +12,7 @@ class GameLoop {
 		Player p = new Player();
 		
 		c.setLevel(l);
+		c.addDrawable(l);
 		c.addDrawable(p);
 		c.addKeyListener(p);
 		
@@ -20,6 +21,12 @@ class GameLoop {
 		while (true) {
 			p.update();
 			c.repaint();
+			
+			try {
+				Thread.sleep(1000 / 30);
+			} catch (InterruptedException e) {
+				System.err.println(e.getLocalizedMessage());
+			}
 		}
 	}
 }
