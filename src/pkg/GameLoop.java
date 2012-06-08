@@ -10,16 +10,12 @@ class GameLoop {
 
     public static void main(String[] args) {
         Level l = new Level("lvl1.txt");
-        Player p = new Player();
 
-        l.addPlayer(p);
-
-        camera.addKeyListener(p);
         camera.setVisible(true);
 
         while (true) {
-            l.checkCollide(p);
-            p.update();
+            l.update();
+            l.checkCollide();
 
             camera.update(l.getArtifacts());
             camera.repaint();

@@ -42,6 +42,15 @@ public class Level implements CameraDrawable {
                     BufferedImage tmp = ImageIO.read(new File(GameLoop.RESDIR
                             + GameLoop.IMGDIR + imagefilename));
                     map.add(new Block(tmp, x, y, c));
+                } else if (line.startsWith("#")) {
+                    String[] toks = line.split(" ");
+                    String imagefilename = toks[1];
+                    int x = Integer.parseInt(toks[2]);
+                    int y = Integer.parseInt(toks[3]);
+                    this.player = new Player(imagefilename);
+                    this.player.posx = x * 50;
+                    this.player.posy = y * 50;
+                    GameLoop.camera.addKeyListener(this.player);
                 } else if (line.startsWith("//")) {
                     // Ignore lines that start with double slash
                     // These will be comments in the level files
@@ -55,11 +64,15 @@ public class Level implements CameraDrawable {
         }
     }
 
-    public void checkCollide(Collider c) {
+    public void update() {
+        this.player.update();
+    }
+
+    public void checkCollide() {
         for (int i = 0; i < map.w; i++) {
             for (int j = 0; j < map.h; j++) {
                 if (map.map[i][j] != null)
-                    map.map[i][j].checkCollide(c);
+                    this.player.checkCollide(map.map[i][j]);
             }
         }
     }
@@ -71,10 +84,6 @@ public class Level implements CameraDrawable {
 
     public Block blockAt(int x, int y) {
         return map.get(x / 50, y / 50);
-    }
-
-    public void addPlayer(Player p) {
-        this.player = p;
     }
 
     @Override

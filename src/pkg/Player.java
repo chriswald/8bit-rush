@@ -31,7 +31,9 @@ public class Player extends Collider implements CameraDrawable, KeyListener {
 
     public String           imgfile        = "player.jpg";
 
-    public Player() {
+    public Player(String filename) {
+        imgfile = filename;
+        rightside = leftside = topside = bottomside = true;
         loadImage();
     }
 
@@ -127,6 +129,7 @@ public class Player extends Collider implements CameraDrawable, KeyListener {
         } else {
             ground = false;
         }
+
     }
 
     private void move() {
@@ -142,7 +145,8 @@ public class Player extends Collider implements CameraDrawable, KeyListener {
             posx = 1600 - img.getWidth();
 
         if (ground)
-            posy = 900 - img.getHeight();
+            // posy = 900 - img.getHeight();
+            vely = 0;
         else if (rightwall || leftwall) // Slide down walls more slowly than
                                         // through free space
             vely += .1;
@@ -237,24 +241,19 @@ public class Player extends Collider implements CameraDrawable, KeyListener {
     }
 
     @Override
-    protected void onCollide(CollidedSide side, Collider c) {
+    public void onCollide(CollidedSide side, Collider c) {
         switch (side) {
+        case BOTTOM:
+            this.ground = true;
+            break;
         case RIGHT:
-            rightwall = true;
-            velx = 0;
+            this.rightwall = true;
             break;
         case LEFT:
-            leftwall = true;
-            velx = 0;
+            this.leftwall = true;
             break;
-        case BOTTOM:
-            ground = true;
-            vely = 0;
-            break;
-        case TOP:
-            ceiling = true;
+        default:
             break;
         }
     }
-
 }
