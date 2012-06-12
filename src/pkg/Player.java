@@ -44,7 +44,8 @@ public class Player extends Collider implements CameraDrawable, KeyListener {
         try {
             tmp = ImageIO.read(new File(filename));
         } catch (IOException e) {
-            System.err.println(e.getLocalizedMessage());
+            System.err.println("Cannot load the image file for the player.\n"
+                    + filename + "\n" + e.getLocalizedMessage());
             JOptionPane.showMessageDialog(null,
                     "Cannot load the image file for the player.\n" + filename);
             drawPlayer(tmp);
@@ -111,44 +112,12 @@ public class Player extends Collider implements CameraDrawable, KeyListener {
         }
     }
 
-    private void checkbounds() {
-        if (posx <= 0) {
-            leftwall = true;
-        } else {
-            leftwall = false;
-        }
-
-        if (posx >= 1600 - img.getWidth()) {
-            rightwall = true;
-        } else {
-            rightwall = false;
-        }
-
-        if (posy >= 900 - img.getHeight()) {
-            ground = true;
-        } else {
-            ground = false;
-        }
-
-    }
-
     private void move() {
         posx += velx;
         posy += vely;
 
-        checkbounds();
-
-        if (leftwall)
-            posx = 0;
-
-        if (rightwall)
-            posx = 1600 - img.getWidth();
-
-        if (ground)
-            // posy = 900 - img.getHeight();
-            vely = 0;
-        else if (rightwall || leftwall) // Slide down walls more slowly than
-                                        // through free space
+        if (rightwall || leftwall) // Slide down walls more slowly than
+                                   // through free space
             vely += .1;
         else
             vely += .5;

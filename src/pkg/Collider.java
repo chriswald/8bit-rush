@@ -27,7 +27,7 @@ public abstract class Collider {
             int deltay = Math.abs(tmid.y - bmid.y);
 
             if (deltax > deltay) {
-                if (this.velx > 0) {
+                if (this.getMid().x < c.getMid().x) {
                     if (this.rightside && c.leftside) {
                         this.posx = c.posx - this.width;
                         this.velx = 0;
@@ -43,7 +43,7 @@ public abstract class Collider {
                     }
                 }
             } else {
-                if (this.vely > 0) {
+                if (this.getMid().y > c.getMid().y) {
                     if (this.bottomside && c.topside) {
                         this.posy = c.posy - this.height;
                         this.vely = 0;
@@ -64,6 +64,7 @@ public abstract class Collider {
     }
 
     public Point getMid() {
-        return new Point((int) (posx - width / 2), (int) (posy - height / 2));
+        return new Point((int) (this.posx - this.width / 2),
+                (int) (this.posy - this.height / 2));
     }
 }

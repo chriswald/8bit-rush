@@ -6,5 +6,17 @@
 @ block.jpg 4 12 1111
 @ block.jpg 5 11 1110
 @ block.jpg 6 12 1111
-@ block.jpg 4 17 1101
+@ block.jpg 0 17 1101
+@ block.jpg 1 17 1000
+@ block.jpg 2 17 1000
+@ block.jpg 3 17 1000
+@ block.jpg 4 17 1000
+@ block.jpg 5 17 1000
+@ block.jpg 6 17 1000
+@ block.jpg 7 17 1000
+@ block.jpg 8 17 1000
+@ block.jpg 9 17 1000
+@ block.jpg 10 17 1000
+@ block.jpg 11 17 1000
+@ block.jpg 12 17 1000
 # player.jpg 1 0

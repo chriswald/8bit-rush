@@ -69,6 +69,10 @@ public class Level implements CameraDrawable {
     }
 
     public void checkCollide() {
+        this.player.ground = false;
+        this.player.rightwall = false;
+        this.player.leftwall = false;
+
         for (int i = 0; i < map.w; i++) {
             for (int j = 0; j < map.h; j++) {
                 if (map.map[i][j] != null)
