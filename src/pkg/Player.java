@@ -116,8 +116,9 @@ public class Player extends Collider implements CameraDrawable, KeyListener {
         posx += velx;
         posy += vely;
 
-        if (rightwall || leftwall) // Slide down walls more slowly than
-                                   // through free space
+        // Slide down walls more slowly than
+        // through free space
+        if ((rightwall || leftwall) && vely >= 0)
             vely += .1;
         else
             vely += .5;
@@ -213,13 +214,24 @@ public class Player extends Collider implements CameraDrawable, KeyListener {
     public void onCollide(CollidedSide side, Collider c) {
         switch (side) {
         case BOTTOM:
+            this.posy = c.posy - this.height;
+            this.vely = 0;
             this.ground = true;
             break;
         case RIGHT:
+            this.posx = c.posx - this.width;
+            this.velx = 0;
             this.rightwall = true;
             break;
         case LEFT:
+            this.posx = c.posx + c.width;
+            this.velx = 0;
             this.leftwall = true;
+            break;
+        case TOP:
+            this.posy = c.posy + c.height;
+            this.vely = 0;
+            this.ceiling = true;
             break;
         default:
             break;

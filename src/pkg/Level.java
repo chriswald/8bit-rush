@@ -14,6 +14,8 @@ import javax.swing.JOptionPane;
 public class Level implements CameraDrawable {
     public int    widthpx;
     public int    heightpx;
+    public int    blockwidthpx;
+    public int    blockheightpx;
 
     public Map    map;
 
@@ -29,9 +31,12 @@ public class Level implements CameraDrawable {
                     String[] toks = line.split(" ");
                     int blockswide = Integer.parseInt(toks[1]);
                     int blockshigh = Integer.parseInt(toks[2]);
-                    widthpx = blockswide * 50;
-                    heightpx = blockswide * 50;
-                    map = new Map(blockswide, blockshigh);
+                    this.blockwidthpx = Integer.parseInt(toks[3]);
+                    this.blockheightpx = Integer.parseInt(toks[4]);
+                    widthpx = blockswide * this.blockwidthpx;
+                    heightpx = blockswide * this.blockheightpx;
+                    map = new Map(blockswide, blockshigh, this.blockwidthpx,
+                            this.blockheightpx);
                 } else if (line.startsWith("@")) {
                     String[] toks = line.split(" ");
                     String imagefilename = toks[1];
@@ -48,8 +53,8 @@ public class Level implements CameraDrawable {
                     int x = Integer.parseInt(toks[2]);
                     int y = Integer.parseInt(toks[3]);
                     this.player = new Player(imagefilename);
-                    this.player.posx = x * 50;
-                    this.player.posy = y * 50;
+                    this.player.posx = x * this.blockwidthpx;
+                    this.player.posy = y * this.blockheightpx;
                     GameLoop.camera.addKeyListener(this.player);
                 } else if (line.startsWith("//")) {
                     // Ignore lines that start with double slash
@@ -82,12 +87,12 @@ public class Level implements CameraDrawable {
     }
 
     public Point onBlock() {
-        return new Point((int) this.player.posx / 50,
-                (int) this.player.posy / 50);
+        return new Point((int) this.player.posx / this.blockwidthpx,
+                (int) this.player.posy / this.blockheightpx);
     }
 
     public Block blockAt(int x, int y) {
-        return map.get(x / 50, y / 50);
+        return map.get(x / this.blockwidthpx, y / this.blockheightpx);
     }
 
     @Override

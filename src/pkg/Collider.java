@@ -21,39 +21,31 @@ public abstract class Collider {
 
         if (collided) {
             Point tmid = this.getMid();
-            Point bmid = c.getMid();
+            Point cmid = c.getMid();
 
-            int deltax = Math.abs(tmid.x - bmid.x);
-            int deltay = Math.abs(tmid.y - bmid.y);
+            int deltax = Math.abs(tmid.x - cmid.x);
+            int deltay = Math.abs(tmid.y - cmid.y);
 
             if (deltax > deltay) {
-                if (this.getMid().x < c.getMid().x) {
+                if (tmid.x < cmid.x) {
                     if (this.rightside && c.leftside) {
-                        this.posx = c.posx - this.width;
-                        this.velx = 0;
                         this.onCollide(CollidedSide.RIGHT, c);
                         c.onCollide(CollidedSide.LEFT, this);
                     }
                 } else {
                     if (this.leftside && c.rightside) {
-                        this.posx = c.posx + c.width;
-                        this.velx = 0;
                         this.onCollide(CollidedSide.LEFT, c);
                         c.onCollide(CollidedSide.RIGHT, this);
                     }
                 }
             } else {
-                if (this.getMid().y > c.getMid().y) {
+                if (tmid.y <= cmid.y) {
                     if (this.bottomside && c.topside) {
-                        this.posy = c.posy - this.height;
-                        this.vely = 0;
                         this.onCollide(CollidedSide.BOTTOM, c);
                         c.onCollide(CollidedSide.TOP, this);
                     }
                 } else {
                     if (this.topside && c.bottomside) {
-                        this.posy = c.posy + c.height;
-                        this.vely = 0;
                         this.onCollide(CollidedSide.TOP, c);
                         c.onCollide(CollidedSide.BOTTOM, this);
                     }
@@ -61,10 +53,22 @@ public abstract class Collider {
             }
         }
 
+        /*
+         * if (collided) { Point tmid = this.getMid(); Point cmid = c.getMid();
+         * 
+         * if (tmid.y <= cmid.y) { if (this.bottomside && c.topside) {
+         * this.onCollide(CollidedSide.BOTTOM, c); c.onCollide(CollidedSide.TOP,
+         * this);
+         * 
+         * } } else { if (this.topside && c.bottomside) {
+         * this.onCollide(CollidedSide.TOP, c); c.onCollide(CollidedSide.BOTTOM,
+         * this); } } }
+         */
+
     }
 
     public Point getMid() {
-        return new Point((int) (this.posx - this.width / 2),
-                (int) (this.posy - this.height / 2));
+        return new Point((int) (this.posx + this.width / 2),
+                (int) (this.posy + this.height / 2));
     }
 }

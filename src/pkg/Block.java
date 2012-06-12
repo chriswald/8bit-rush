@@ -10,11 +10,11 @@ public class Block extends Collider {
         this.img = img;
         this.x = x;
         this.y = y;
-        this.posx = this.x * 50;
-        this.posy = this.y * 50;
+        this.posx = this.x * img.getWidth();
+        this.posy = this.y * img.getHeight();
 
-        this.width = 50;
-        this.height = 50;
+        this.width = img.getWidth();
+        this.height = img.getHeight();
 
         if (collide.charAt(0) == '1')
             topside = true;
