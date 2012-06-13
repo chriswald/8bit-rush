@@ -1,7 +1,6 @@
 package pkg;
 
 import java.awt.Graphics;
-import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
@@ -10,25 +9,39 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 
 class Camera extends JFrame implements KeyListener {
-    private static final long        serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-    public BufferedImage             todraw;
-    public ArrayList<CameraDrawable> drawables;
-    public int                       posx;
-    public int                       posy;
+    public BufferedImage      todraw;
+    public int                posx;
+    public int                posy;
 
     public Camera() {
-        int sw = Toolkit.getDefaultToolkit().getScreenSize().width;
-        int sh = Toolkit.getDefaultToolkit().getScreenSize().height;
-
-        todraw = new BufferedImage(sw, sh, BufferedImage.TYPE_INT_ARGB);
-        drawables = new ArrayList<CameraDrawable>(0);
         posx = 0;
         posy = 0;
 
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setUndecorated(true);
         this.addKeyListener(this);
+    }
+
+    public void setPostition(Player p) {
+        posx = p.getMid().x - (GameLoop.SCREENW / 2);
+        posy = p.getMid().y - (3 * GameLoop.SCREENH / 4);
+
+        if (posx < 0)
+            posx = 0;
+        if (posx + GameLoop.SCREENW > todraw.getWidth())
+            posx = todraw.getWidth() - GameLoop.SCREENW;
+
+        if (posy < 0)
+            posy = 0;
+        if (posy + GameLoop.SCREENH > todraw.getHeight())
+            posy = todraw.getHeight() - GameLoop.SCREENH;
+    }
+
+    public void setLevel(Level l) {
+        todraw = new BufferedImage(l.widthpx, l.heightpx,
+                BufferedImage.TYPE_INT_ARGB);
     }
 
     public void update(ArrayList<Artifact> artifacts) {
@@ -40,7 +53,9 @@ class Camera extends JFrame implements KeyListener {
 
     @Override
     public void paint(Graphics g) {
-        g.drawImage(todraw, 0, 0, null);
+        g.drawImage(todraw, 0, 0, GameLoop.SCREENW, GameLoop.SCREENH, posx,
+                posy, posx + GameLoop.SCREENW, posy + GameLoop.SCREENH, null);
+        // g.drawImage(todraw, posx, posy, null);
     }
 
     @Override

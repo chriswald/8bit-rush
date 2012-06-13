@@ -1,27 +1,42 @@
 package pkg;
 
-class GameLoop {
-    public static String RESDIR = "res/";
-    public static String IMGDIR = "img/";
-    public static String SNDDIR = "snd/";
-    public static String LVLDIR = "lvl/";
+import java.awt.Toolkit;
 
-    public static Camera camera = new Camera();
+class GameLoop {
+    public static String RESDIR  = "res/";
+    public static String IMGDIR  = "img/";
+    public static String SNDDIR  = "snd/";
+    public static String LVLDIR  = "lvl/";
+
+    public static Camera camera;
+
+    public static int    SCREENW = Toolkit.getDefaultToolkit().getScreenSize().width;
+    public static int    SCREENH = Toolkit.getDefaultToolkit().getScreenSize().height;
 
     public static void main(String[] args) {
+        SCREENW = Toolkit.getDefaultToolkit().getScreenSize().width;
+        SCREENH = Toolkit.getDefaultToolkit().getScreenSize().height;
+
+        camera = new Camera();
         Level l = new Level("lvl1.txt");
+        camera.setLevel(l);
 
         camera.setVisible(true);
 
         while (true) {
+            long starttime = System.currentTimeMillis();
             l.update();
             l.checkCollide();
 
+            camera.setPostition(l.player);
             camera.update(l.getArtifacts());
             camera.repaint();
+            long endtime = System.currentTimeMillis();
 
             try {
-                Thread.sleep(1000 / 30);
+                long sleeptime = (1000 / 24) - (endtime - starttime);
+                if (sleeptime > 0)
+                    Thread.sleep(sleeptime);
             } catch (InterruptedException e) {
                 System.err.println(e.getLocalizedMessage());
             }

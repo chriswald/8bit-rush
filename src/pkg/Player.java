@@ -29,7 +29,7 @@ public class Player extends Collider implements CameraDrawable, KeyListener {
     public static final int MAXGROUNDSPEED = 5;
     public static final int MAXAIRSPEED    = 4;
 
-    public String           imgfile        = "player.jpg";
+    public String           imgfile        = "player.png";
 
     public Player(String filename) {
         imgfile = filename;
@@ -122,6 +122,9 @@ public class Player extends Collider implements CameraDrawable, KeyListener {
             vely += .1;
         else
             vely += .5;
+
+        if (vely > this.img.getHeight() / 2)
+            vely = this.img.getHeight() / 2;
     }
 
     public void startMoveRight() {

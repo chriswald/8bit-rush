@@ -35,7 +35,7 @@ public class Level implements CameraDrawable {
                     this.blockwidthpx = Integer.parseInt(toks[3]);
                     this.blockheightpx = Integer.parseInt(toks[4]);
                     widthpx = blockswide * this.blockwidthpx;
-                    heightpx = blockswide * this.blockheightpx;
+                    heightpx = blockshigh * this.blockheightpx;
                     map = new Map(blockswide, blockshigh, this.blockwidthpx,
                             this.blockheightpx);
                 } else if (line.startsWith("@")) {
@@ -110,10 +110,15 @@ public class Level implements CameraDrawable {
 
     @Override
     public ArrayList<Artifact> getArtifacts() {
-        ArrayList<Artifact> tmp = new ArrayList<Artifact>();
+        ArrayList<Artifact> tmp = new ArrayList<Artifact>(
+                backgrounds.size() + 2);
 
         for (BufferedImage b : backgrounds) {
-            tmp.add(new Artifact(0, 0, b));
+            int x = 0;
+            do {
+                tmp.add(new Artifact(x, 0, b));
+                x += b.getWidth();
+            } while (x < widthpx);
         }
 
         tmp.addAll(map.getArtifacts());

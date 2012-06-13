@@ -34,7 +34,7 @@ public class Block extends Collider {
         if (collide.charAt(3) == '1')
             leftside = true;
         else
-            leftside = true;
+            leftside = false;
     }
 
     @Override

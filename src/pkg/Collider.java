@@ -52,19 +52,6 @@ public abstract class Collider {
                 }
             }
         }
-
-        /*
-         * if (collided) { Point tmid = this.getMid(); Point cmid = c.getMid();
-         * 
-         * if (tmid.y <= cmid.y) { if (this.bottomside && c.topside) {
-         * this.onCollide(CollidedSide.BOTTOM, c); c.onCollide(CollidedSide.TOP,
-         * this);
-         * 
-         * } } else { if (this.topside && c.bottomside) {
-         * this.onCollide(CollidedSide.TOP, c); c.onCollide(CollidedSide.BOTTOM,
-         * this); } } }
-         */
-
     }
 
     public Point getMid() {
