@@ -58,7 +58,7 @@ public class Player extends Collider implements CameraDrawable, KeyListener {
 
     private void drawPlayer(BufferedImage img) {
         Graphics g = img.getGraphics();
-        g.setColor(Color.red);
+        g.setColor(Color.red.darker());
         g.fillRect(0, 0, img.getWidth(), img.getHeight());
     }
 
@@ -230,7 +230,7 @@ public class Player extends Collider implements CameraDrawable, KeyListener {
             break;
         case TOP:
             this.posy = c.posy + c.height;
-            this.vely = 0;
+            this.vely = Math.abs(this.vely);
             this.ceiling = true;
             break;
         default:

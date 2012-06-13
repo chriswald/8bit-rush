@@ -1,6 +1,5 @@
 package pkg;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -31,8 +30,6 @@ public class Map implements CameraDrawable {
         BufferedImage tmp = new BufferedImage(w * this.blockwidth, h
                 * blockheight, BufferedImage.TYPE_INT_ARGB);
         Graphics g = tmp.getGraphics();
-        g.setColor(Color.black);
-        g.fillRect(0, 0, tmp.getWidth(), tmp.getHeight());
         for (int i = 0; i < w; i++) {
             for (int j = 0; j < h; j++) {
                 if (map[i][j] != null) {

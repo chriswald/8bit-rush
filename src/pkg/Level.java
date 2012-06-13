@@ -12,14 +12,15 @@ import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
 public class Level implements CameraDrawable {
-    public int    widthpx;
-    public int    heightpx;
-    public int    blockwidthpx;
-    public int    blockheightpx;
+    public int                      widthpx;
+    public int                      heightpx;
+    public int                      blockwidthpx;
+    public int                      blockheightpx;
 
-    public Map    map;
+    public Map                      map;
+    public ArrayList<BufferedImage> backgrounds = new ArrayList<BufferedImage>();
 
-    public Player player;
+    public Player                   player;
 
     public Level(String filename) {
         try {
@@ -56,6 +57,18 @@ public class Level implements CameraDrawable {
                     this.player.posx = x * this.blockwidthpx;
                     this.player.posy = y * this.blockheightpx;
                     GameLoop.camera.addKeyListener(this.player);
+                } else if (line.startsWith("$")) {
+                    String[] toks = line.split(" ");
+                    try {
+                        backgrounds.add(ImageIO.read(new File(GameLoop.RESDIR
+                                + GameLoop.IMGDIR + toks[1])));
+                    } catch (IOException e) {
+                        System.err.println("Cannot load the background image "
+                                + toks[1]);
+                        System.err.println(e.getLocalizedMessage());
+                        JOptionPane.showMessageDialog(null,
+                                "Cannot load the background image " + toks[1]);
+                    }
                 } else if (line.startsWith("//")) {
                     // Ignore lines that start with double slash
                     // These will be comments in the level files
@@ -97,7 +110,13 @@ public class Level implements CameraDrawable {
 
     @Override
     public ArrayList<Artifact> getArtifacts() {
-        ArrayList<Artifact> tmp = map.getArtifacts();
+        ArrayList<Artifact> tmp = new ArrayList<Artifact>();
+
+        for (BufferedImage b : backgrounds) {
+            tmp.add(new Artifact(0, 0, b));
+        }
+
+        tmp.addAll(map.getArtifacts());
         tmp.addAll(player.getArtifacts());
 
         return tmp;
