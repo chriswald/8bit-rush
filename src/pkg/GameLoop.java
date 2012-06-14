@@ -34,7 +34,7 @@ class GameLoop {
             long endtime = System.currentTimeMillis();
 
             try {
-                long sleeptime = (1000 / 30) - (endtime - starttime);
+                long sleeptime = (1000 / 28) - (endtime - starttime);
                 if (sleeptime > 0)
                     Thread.sleep(sleeptime);
             } catch (InterruptedException e) {

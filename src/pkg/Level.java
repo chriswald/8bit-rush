@@ -1,5 +1,6 @@
 package pkg;
 
+import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -19,6 +20,7 @@ class Level implements CameraDrawable {
 
     public Map                      map;
     public ArrayList<BufferedImage> backgrounds = new ArrayList<BufferedImage>();
+    public BufferedImage            genbackground;
 
     public Player                   player;
 
@@ -62,6 +64,7 @@ class Level implements CameraDrawable {
                     try {
                         backgrounds.add(ImageIO.read(new File(GameLoop.RESDIR
                                 + GameLoop.IMGDIR + toks[1])));
+                        this.generateBackground();
                     } catch (IOException e) {
                         System.err.println("Cannot load the background image "
                                 + toks[1]);
@@ -82,6 +85,20 @@ class Level implements CameraDrawable {
         }
     }
 
+    public void generateBackground() {
+        genbackground = new BufferedImage(this.widthpx, this.heightpx,
+                BufferedImage.TYPE_INT_ARGB);
+        Graphics g = genbackground.getGraphics();
+
+        for (BufferedImage b : backgrounds) {
+            int x = 0;
+            do {
+                g.drawImage(b, x, 0, null);
+                x += b.getWidth();
+            } while (x < widthpx);
+        }
+    }
+
     public void update() {
         this.player.update();
     }
@@ -91,11 +108,8 @@ class Level implements CameraDrawable {
         this.player.rightwall = false;
         this.player.leftwall = false;
 
-        for (int i = 0; i < map.w; i++) {
-            for (int j = 0; j < map.h; j++) {
-                if (map.map[i][j] != null)
-                    this.player.checkCollide(map.map[i][j]);
-            }
+        for (Block b : map.map) {
+            this.player.checkCollide(b);
         }
     }
 
@@ -110,17 +124,9 @@ class Level implements CameraDrawable {
 
     @Override
     public ArrayList<Artifact> getArtifacts() {
-        ArrayList<Artifact> tmp = new ArrayList<Artifact>(
-                backgrounds.size() + 2);
+        ArrayList<Artifact> tmp = new ArrayList<Artifact>(3);
 
-        for (BufferedImage b : backgrounds) {
-            int x = 0;
-            do {
-                tmp.add(new Artifact(x, 0, b));
-                x += b.getWidth();
-            } while (x < widthpx);
-        }
-
+        tmp.add(new Artifact(0, 0, genbackground));
         tmp.addAll(map.getArtifacts());
         tmp.addAll(player.getArtifacts());
 
