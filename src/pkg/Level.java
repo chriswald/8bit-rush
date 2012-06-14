@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
-public class Level implements CameraDrawable {
+class Level implements CameraDrawable {
     public int                      widthpx;
     public int                      heightpx;
     public int                      blockwidthpx;

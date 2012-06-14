@@ -4,7 +4,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class Map implements CameraDrawable {
+class Map implements CameraDrawable {
     public Block[][] map;
     public int       w, h;
     public int       blockwidth, blockheight;

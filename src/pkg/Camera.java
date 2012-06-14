@@ -55,7 +55,6 @@ class Camera extends JFrame implements KeyListener {
     public void paint(Graphics g) {
         g.drawImage(todraw, 0, 0, GameLoop.SCREENW, GameLoop.SCREENH, posx,
                 posy, posx + GameLoop.SCREENW, posy + GameLoop.SCREENH, null);
-        // g.drawImage(todraw, posx, posy, null);
     }
 
     @Override

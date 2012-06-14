@@ -12,24 +12,24 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
-public class Player extends Collider implements CameraDrawable, KeyListener {
-    public boolean          up             = false;
-    public boolean          right          = false;
-    public boolean          down           = false;
-    public boolean          left           = false;
-    public boolean          space          = false;
+class Player extends Character implements CameraDrawable, KeyListener {
+    public boolean       up             = false;
+    public boolean       right          = false;
+    public boolean       down           = false;
+    public boolean       left           = false;
+    public boolean       space          = false;
 
-    public boolean          rightwall      = false;
-    public boolean          leftwall       = false;
-    public boolean          ground         = false;
-    public boolean          ceiling        = false;
+    public boolean       rightwall      = false;
+    public boolean       leftwall       = false;
+    public boolean       ground         = false;
+    public boolean       ceiling        = false;
 
-    public BufferedImage    img;
+    public BufferedImage img;
 
-    public static final int MAXGROUNDSPEED = 5;
-    public static final int MAXAIRSPEED    = 4;
+    public static int    MAXGROUNDSPEED = 5;
+    public static int    MAXAIRSPEED    = 4;
 
-    public String           imgfile        = "player.png";
+    public String        imgfile        = "player.png";
 
     public Player(String filename) {
         imgfile = filename;
@@ -62,6 +62,7 @@ public class Player extends Collider implements CameraDrawable, KeyListener {
         g.fillRect(0, 0, img.getWidth(), img.getHeight());
     }
 
+    @Override
     public void update() {
         handlejumping();
         handlerunning();
@@ -91,6 +92,8 @@ public class Player extends Collider implements CameraDrawable, KeyListener {
             if (ground) {
                 if (velx < MAXGROUNDSPEED) {
                     velx += .5;
+                } else {
+                    velx -= .5;
                 }
             } else {
                 if (velx < MAXAIRSPEED) {
@@ -103,6 +106,8 @@ public class Player extends Collider implements CameraDrawable, KeyListener {
             if (ground) {
                 if (velx > -MAXGROUNDSPEED) {
                     velx -= .5;
+                } else {
+                    velx += .5;
                 }
             } else {
                 if (velx > -MAXAIRSPEED) {
@@ -171,6 +176,11 @@ public class Player extends Collider implements CameraDrawable, KeyListener {
         case KeyEvent.VK_SPACE:
             space = true;
             break;
+        case KeyEvent.VK_SHIFT:
+            MAXGROUNDSPEED = 7;
+            break;
+        default:
+            break;
         }
     }
 
@@ -192,6 +202,8 @@ public class Player extends Collider implements CameraDrawable, KeyListener {
         case KeyEvent.VK_SPACE:
             space = false;
             break;
+        case KeyEvent.VK_SHIFT:
+            MAXGROUNDSPEED = 5;
         default:
             break;
         }
@@ -240,4 +252,7 @@ public class Player extends Collider implements CameraDrawable, KeyListener {
             break;
         }
     }
+
+    @Override
+    public void interact() {}
 }

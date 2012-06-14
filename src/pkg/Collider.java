@@ -2,7 +2,7 @@ package pkg;
 
 import java.awt.Point;
 
-public abstract class Collider {
+abstract class Collider {
     public double posx;
     public double posy;
     public int    width;
@@ -28,27 +28,27 @@ public abstract class Collider {
 
             if (deltax > deltay) {
                 if (tmid.x < cmid.x) {
-                    if (this.rightside && c.leftside) {
-                        this.onCollide(CollidedSide.RIGHT, c);
+                    if (this.rightside)
                         c.onCollide(CollidedSide.LEFT, this);
-                    }
+                    if (c.leftside)
+                        this.onCollide(CollidedSide.RIGHT, c);
                 } else {
-                    if (this.leftside && c.rightside) {
-                        this.onCollide(CollidedSide.LEFT, c);
+                    if (this.leftside)
                         c.onCollide(CollidedSide.RIGHT, this);
-                    }
+                    if (c.rightside)
+                        this.onCollide(CollidedSide.LEFT, c);
                 }
             } else {
                 if (tmid.y <= cmid.y) {
-                    if (this.bottomside && c.topside) {
-                        this.onCollide(CollidedSide.BOTTOM, c);
+                    if (this.bottomside)
                         c.onCollide(CollidedSide.TOP, this);
-                    }
+                    if (c.topside)
+                        this.onCollide(CollidedSide.BOTTOM, c);
                 } else {
-                    if (this.topside && c.bottomside) {
-                        this.onCollide(CollidedSide.TOP, c);
+                    if (this.topside)
                         c.onCollide(CollidedSide.BOTTOM, this);
-                    }
+                    if (c.bottomside)
+                        this.onCollide(CollidedSide.TOP, c);
                 }
             }
         }

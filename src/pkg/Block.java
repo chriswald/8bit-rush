@@ -2,7 +2,7 @@ package pkg;
 
 import java.awt.image.BufferedImage;
 
-public class Block extends Collider {
+class Block extends Collider {
     public BufferedImage img;
     public int           x, y;
 
