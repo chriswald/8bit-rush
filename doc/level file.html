@@ -1,0 +1,94 @@
+<html>
+<body>
+  <h1>Level File Specifications</h1>
+  <p>This file specifies all information needed for each level to
+  load, from what images to use as backgrounds to where to place the
+  enemies. Each line starts with one of several tokens which identify
+  how to handle the information presented on that line.</p>
+
+  <table border="1">
+    <tr>
+      <th>Line Specification</th>
+      <th>Token</th>
+      <th>Element 1</th>
+      <th>Element 2</th>
+      <th>Element 3</th>
+      <th>Element 4</th>
+      <th>Element 5</th>
+    </tr>
+    <tr>
+      <td>Level Header Info</td>
+      <td>!</td>
+      <td>Number of blocks wide.</td>
+      <td>Number of blocks high.</td>
+      <td>Width of each block (px).</td>
+      <td>Height of each block (px).</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Block specification</td>
+      <td>@</td>
+      <td>Image's file name</td>
+      <td>X position of block (See notes)</td>
+      <td>Y position of block (See notes)</td>
+      <td>Collision Code (See notes)</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Player Info</td>
+      <td>#</td>
+      <td>Image's file name</td>
+      <td>X position of player (See notes)</td>
+      <td>Y position of player (See notes)</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Background Layer Images</td>
+      <td>$</td>
+      <td>Image's file name</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Enemy Info</td>
+      <td>%</td>
+      <td>Image's file name</td>
+      <td>X position of enemy (See notes)</td>
+      <td>Y position of enemy (See notes)</td>
+      <td>X velocity of enemy (See notes)</td>
+      <td>Y velocity of enemy (See notes)</td>
+    </tr>
+    <tr>
+      <td>Comment</td>
+      <td>//</td>
+      <td>Comment text</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </table>
+
+  <h2>Notes</h2>
+  <p>"X position" and "Y position" are specified in block-widths and
+  block heights respectivly from the upper left corner of the
+  screen.</p>
+  <p>"X velocity" and "Y velocity" are specified in pixels per
+  update. An update occures approximately once every 1/30 second.</p>
+  <p>The "Collision Code" is a 4 diget binary number where a one (1)
+  represents "true" and a zero (0) represents "false". Each diget
+  represents whether a certain side is "collidable", that is whether a
+  player, enemy, etc. should trigger a collision event upon colliding
+  with that side of the block. Each diget represents a side, ordered
+  top, right, bottom, left when reading from left to right. For
+  example a code of "1011" mean that a block is "solid" on the top,
+  bottom, and left sides, but not the right side.</p>
+  <p>The "Level Header" line must be the first line in the file, not
+  counting comments. All other lines may occur in any order, however
+  good style is to group lines specifiying similar content.</p>
+
+</body>
+</html>

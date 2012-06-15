@@ -1,0 +1,6 @@
+<html>
+<body>
+  <p>This file specifies all information needed for each level to
+  load, from what images to use as backgrounds to where to place the
+  enemies. Each line starts with one of several tokens which identify
+  how to handle the information presented on that line.

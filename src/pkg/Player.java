@@ -4,59 +4,30 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
-import javax.swing.JOptionPane;
-
 class Player extends Character implements CameraDrawable, KeyListener {
-    public boolean       up             = false;
-    public boolean       right          = false;
-    public boolean       down           = false;
-    public boolean       left           = false;
-    public boolean       space          = false;
+    public boolean    up             = false;
+    public boolean    right          = false;
+    public boolean    down           = false;
+    public boolean    left           = false;
+    public boolean    space          = false;
 
-    public boolean       rightwall      = false;
-    public boolean       leftwall       = false;
-    public boolean       ground         = false;
-    public boolean       ceiling        = false;
+    public boolean    rightwall      = false;
+    public boolean    leftwall       = false;
+    public boolean    ground         = false;
+    public boolean    ceiling        = false;
 
-    public BufferedImage img;
-
-    public static int    MAXGROUNDSPEED = 5;
-    public static int    MAXAIRSPEED    = 4;
-
-    public String        imgfile        = "player.png";
+    public static int MAXGROUNDSPEED = 5;
+    public static int MAXAIRSPEED    = 4;
 
     public Player(String filename) {
-        imgfile = filename;
+        super(filename);
         rightside = leftside = topside = bottomside = true;
-        loadImage();
     }
 
-    private void loadImage() {
-        String filename = GameLoop.RESDIR + GameLoop.IMGDIR + imgfile;
-        BufferedImage tmp = new BufferedImage(10, 20,
-                BufferedImage.TYPE_INT_ARGB);
-        try {
-            tmp = ImageIO.read(new File(filename));
-        } catch (IOException e) {
-            System.err.println("Cannot load the image file for the player.\n"
-                    + filename + "\n" + e.getLocalizedMessage());
-            JOptionPane.showMessageDialog(null,
-                    "Cannot load the image file for the player.\n" + filename);
-            drawPlayer(tmp);
-        }
-
-        img = tmp;
-        width = img.getWidth();
-        height = img.getHeight();
-    }
-
-    private void drawPlayer(BufferedImage img) {
+    @Override
+    public void drawPlayer() {
         Graphics g = img.getGraphics();
         g.setColor(Color.red.darker());
         g.fillRect(0, 0, img.getWidth(), img.getHeight());

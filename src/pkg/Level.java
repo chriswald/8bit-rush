@@ -24,6 +24,8 @@ class Level implements CameraDrawable {
 
     public Player                   player;
 
+    public ArrayList<Enemy>         enemies     = new ArrayList<Enemy>();
+
     public Level(String filename) {
         try {
             BufferedReader in = new BufferedReader(new FileReader(
@@ -72,6 +74,17 @@ class Level implements CameraDrawable {
                         JOptionPane.showMessageDialog(null,
                                 "Cannot load the background image " + toks[1]);
                     }
+                } else if (line.startsWith("%")) {
+                    String[] toks = line.split(" ");
+                    String imagefilename = toks[1];
+                    int x = Integer.parseInt(toks[2]);
+                    int y = Integer.parseInt(toks[3]);
+                    Enemy enemy = new Enemy(imagefilename);
+                    enemy.posx = x * this.blockwidthpx;
+                    enemy.posy = y * this.blockheightpx;
+                    enemy.velx = Integer.parseInt(toks[4]);
+                    enemy.vely = Integer.parseInt(toks[5]);
+                    this.enemies.add(enemy);
                 } else if (line.startsWith("//")) {
                     // Ignore lines that start with double slash
                     // These will be comments in the level files
@@ -100,16 +113,45 @@ class Level implements CameraDrawable {
     }
 
     public void update() {
+        updatePlayer();
+        updateEnemies();
+    }
+
+    public void updatePlayer() {
         this.player.update();
     }
 
+    public void updateEnemies() {
+        for (Enemy e : enemies)
+            e.update();
+    }
+
     public void checkCollide() {
+        checkPlayerCollide();
+        checkEnemyCollide();
+    }
+
+    public void checkPlayerCollide() {
         this.player.ground = false;
         this.player.rightwall = false;
         this.player.leftwall = false;
+        this.player.ceiling = false;
 
         for (Block b : map.map) {
             this.player.checkCollide(b);
+        }
+    }
+
+    public void checkEnemyCollide() {
+        for (Enemy e : enemies) {
+            e.ground = false;
+            e.rightwall = false;
+            e.leftwall = false;
+            e.ceiling = false;
+
+            for (Block b : map.map) {
+                e.checkCollide(b);
+            }
         }
     }
 
@@ -128,6 +170,8 @@ class Level implements CameraDrawable {
 
         tmp.add(new Artifact(0, 0, genbackground));
         tmp.addAll(map.getArtifacts());
+        for (Enemy e : enemies)
+            tmp.addAll(e.getArtifacts());
         tmp.addAll(player.getArtifacts());
 
         return tmp;
