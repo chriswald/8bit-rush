@@ -7,6 +7,7 @@ class Block extends Collider {
     public int           x, y;
 
     public Block(BufferedImage img, int x, int y, String collide) {
+        ID = "block";
         this.img = img;
         this.x = x;
         this.y = y;

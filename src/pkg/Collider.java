@@ -10,6 +10,8 @@ abstract class Collider {
     public double velx;
     public double vely;
 
+    public String ID = "";
+
     public boolean topside, rightside, bottomside, leftside;
 
     public abstract void onCollide(CollidedSide side, Collider c);

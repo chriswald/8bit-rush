@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
@@ -32,7 +33,7 @@ class Level implements CameraDrawable {
                     GameLoop.RESDIR + GameLoop.LVLDIR + filename));
             String line;
             while ((line = in.readLine()) != null) {
-                if (line.startsWith("!")) {
+                if (line.startsWith("!")) { // Header info
                     String[] toks = line.split(" ");
                     int blockswide = Integer.parseInt(toks[1]);
                     int blockshigh = Integer.parseInt(toks[2]);
@@ -42,7 +43,7 @@ class Level implements CameraDrawable {
                     heightpx = blockshigh * this.blockheightpx;
                     map = new Map(blockswide, blockshigh, this.blockwidthpx,
                             this.blockheightpx);
-                } else if (line.startsWith("@")) {
+                } else if (line.startsWith("@")) { // Blocks
                     String[] toks = line.split(" ");
                     String imagefilename = toks[1];
                     int x = Integer.parseInt(toks[2]);
@@ -52,7 +53,7 @@ class Level implements CameraDrawable {
                     BufferedImage tmp = ImageIO.read(new File(GameLoop.RESDIR
                             + GameLoop.IMGDIR + imagefilename));
                     map.add(new Block(tmp, x, y, c));
-                } else if (line.startsWith("#")) {
+                } else if (line.startsWith("#")) { // Player info
                     String[] toks = line.split(" ");
                     String imagefilename = toks[1];
                     int x = Integer.parseInt(toks[2]);
@@ -61,7 +62,7 @@ class Level implements CameraDrawable {
                     this.player.posx = x * this.blockwidthpx;
                     this.player.posy = y * this.blockheightpx;
                     GameLoop.camera.addKeyListener(this.player);
-                } else if (line.startsWith("$")) {
+                } else if (line.startsWith("$")) { // Background images
                     String[] toks = line.split(" ");
                     try {
                         backgrounds.add(ImageIO.read(new File(GameLoop.RESDIR
@@ -74,7 +75,7 @@ class Level implements CameraDrawable {
                         JOptionPane.showMessageDialog(null,
                                 "Cannot load the background image " + toks[1]);
                     }
-                } else if (line.startsWith("%")) {
+                } else if (line.startsWith("%")) { // Enemies
                     String[] toks = line.split(" ");
                     String imagefilename = toks[1];
                     int x = Integer.parseInt(toks[2]);
@@ -124,11 +125,17 @@ class Level implements CameraDrawable {
     public void updateEnemies() {
         for (Enemy e : enemies)
             e.update();
+        try {
+            for (Enemy e : enemies)
+                if (!e.alive)
+                    this.enemies.remove(e);
+        } catch (ConcurrentModificationException ex) {}
     }
 
     public void checkCollide() {
         checkPlayerCollide();
         checkEnemyCollide();
+        checkPlayerEnemyCollide();
     }
 
     public void checkPlayerCollide() {
@@ -153,6 +160,16 @@ class Level implements CameraDrawable {
                 e.checkCollide(b);
             }
         }
+    }
+
+    public void checkPlayerEnemyCollide() {
+        for (Enemy e : enemies) {
+            this.player.checkCollide(e);
+        }
+    }
+
+    public void killEnemy(Enemy e) {
+        this.enemies.remove(e);
     }
 
     public Point onBlock() {

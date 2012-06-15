@@ -23,6 +23,7 @@ class Player extends Character implements CameraDrawable, KeyListener {
 
     public Player(String filename) {
         super(filename);
+        ID = "player";
         rightside = leftside = topside = bottomside = true;
     }
 
@@ -198,32 +199,56 @@ class Player extends Character implements CameraDrawable, KeyListener {
 
     @Override
     public void onCollide(CollidedSide side, Collider c) {
-        switch (side) {
-        case BOTTOM:
-            this.posy = c.posy - this.height;
-            this.vely = 0;
-            this.ground = true;
-            break;
-        case RIGHT:
-            this.posx = c.posx - this.width;
-            this.velx = 0;
-            this.rightwall = true;
-            break;
-        case LEFT:
-            this.posx = c.posx + c.width;
-            this.velx = 0;
-            this.leftwall = true;
-            break;
-        case TOP:
-            this.posy = c.posy + c.height;
-            this.vely = Math.abs(this.vely);
-            this.ceiling = true;
-            break;
-        default:
-            break;
+        if (c.ID.equals("block")) {
+            switch (side) {
+            case BOTTOM:
+                this.posy = c.posy - this.height;
+                this.vely = 0;
+                this.ground = true;
+                break;
+            case RIGHT:
+                this.posx = c.posx - this.width;
+                this.velx = 0;
+                this.rightwall = true;
+                break;
+            case LEFT:
+                this.posx = c.posx + c.width;
+                this.velx = 0;
+                this.leftwall = true;
+                break;
+            case TOP:
+                this.posy = c.posy + c.height;
+                this.vely = Math.abs(this.vely);
+                this.ceiling = true;
+                break;
+            default:
+                break;
+            }
+        }
+
+        if (c.ID.equals("enemy")) {
+            switch (side) {
+            case BOTTOM:
+                ((Enemy) c).die();
+                this.vely = -this.vely / 2;
+                break;
+            case RIGHT:
+            case LEFT:
+            case TOP:
+                this.die();
+            }
         }
     }
 
     @Override
     public void interact() {}
+
+    @Override
+    public void die() {
+        try {
+            System.out.println("YOU DIED");
+            Thread.sleep(1000);
+            System.exit(0);
+        } catch (InterruptedException e) {}
+    }
 }

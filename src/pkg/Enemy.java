@@ -7,9 +7,11 @@ import java.util.ArrayList;
 class Enemy extends Actor {
 
     public boolean rightwall, leftwall, ground, ceiling;
+    public boolean alive = true;
 
     public Enemy(String filename) {
         super(filename);
+        ID = "enemy";
         rightside = leftside = topside = bottomside = true;
         rightwall = leftwall = ground = ceiling = false;
     }
@@ -78,4 +80,8 @@ class Enemy extends Actor {
         return tmp;
     }
 
+    @Override
+    public void die() {
+        alive = false;
+    }
 }

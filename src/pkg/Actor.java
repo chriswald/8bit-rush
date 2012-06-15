@@ -12,6 +12,7 @@ abstract class Actor extends Collider implements Interactable, CameraDrawable {
 
     public Actor(String filename) {
         imgfile = filename;
+        ID = "actor";
 
         filename = GameLoop.RESDIR + GameLoop.IMGDIR + imgfile;
         img = new BufferedImage(10, 20, BufferedImage.TYPE_INT_ARGB);
@@ -28,6 +29,8 @@ abstract class Actor extends Collider implements Interactable, CameraDrawable {
     }
 
     public abstract void drawPlayer();
+
+    public abstract void die();
 
     public abstract void update();
 }
