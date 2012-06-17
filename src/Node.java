@@ -35,6 +35,10 @@ class Node<T> {
         return this.parent;
     }
 
+    public boolean hasChildren() {
+        return children.size() > 0;
+    }
+
     public void addChild(Node<T> child) {
         child.setParent(this);
         this.children.add(child);
