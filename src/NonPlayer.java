@@ -74,17 +74,13 @@ class NonPlayer extends Character {
             this.ground = true;
             break;
         case RIGHT:
-            // this.posx = c.posx - this.width;
-            // this.rightwall = true;
+            this.rightwall = true;
             break;
         case LEFT:
-            // this.posx = c.posx + c.width;
-            // this.leftwall = true;
+            this.leftwall = true;
             break;
         case TOP:
-            // this.posy = c.posy + c.height;
-            // this.vely = Math.abs(this.vely);
-            // this.ceiling = true;
+            this.ceiling = true;
             break;
         default:
             break;

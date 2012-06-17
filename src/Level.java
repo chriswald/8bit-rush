@@ -12,21 +12,18 @@ import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
 class Level implements CameraDrawable {
-    public int                  widthpx;
-    public int                  heightpx;
-    public int                  blockwidthpx;
-    public int                  blockheightpx;
+    public int              widthpx;
+    public int              heightpx;
+    public int              blockwidthpx;
+    public int              blockheightpx;
 
-    public Map                  map;
-    public BufferedImage        genbackground;
+    public Map              map;
+    public BufferedImage    genbackground;
 
-    public Player               player;
+    public Player           player;
 
-    public ArrayList<NonPlayer> npcgo       = new ArrayList<NonPlayer>();
-    public ArrayList<NonPlayer> npcwait     = new ArrayList<NonPlayer>();
-
-    public ArrayList<Enemy>     enemiesgo   = new ArrayList<Enemy>();
-    public ArrayList<Enemy>     enemieswait = new ArrayList<Enemy>();
+    public ArrayList<Actor> actorgo   = new ArrayList<Actor>();
+    public ArrayList<Actor> actorwait = new ArrayList<Actor>();
 
     public Level(String filename) {
         try {
@@ -91,7 +88,7 @@ class Level implements CameraDrawable {
                     enemy.posy = y * this.blockheightpx;
                     enemy.velx = Integer.parseInt(toks[4]);
                     enemy.vely = Integer.parseInt(toks[5]);
-                    this.enemieswait.add(enemy);
+                    this.actorwait.add(enemy);
                 } else if (line.startsWith("&")) {
                     String[] toks = line.split(" ");
                     String imagefilename = toks[1];
@@ -102,7 +99,7 @@ class Level implements CameraDrawable {
                     npc.posy = y * this.blockheightpx;
                     npc.velx = Integer.parseInt(toks[4]);
                     npc.vely = Integer.parseInt(toks[5]);
-                    this.npcwait.add(npc);
+                    this.actorwait.add(npc);
                 } else if (line.startsWith("//")) {
                     // Ignore lines that start with double slash
                     // These will be comments in the level files
@@ -129,58 +126,36 @@ class Level implements CameraDrawable {
 
     public void update() {
         updatePlayer();
-        updateEnemies();
-        updateNPCs();
+        updateActors();
     }
 
     public void updatePlayer() {
         this.player.update();
     }
 
-    public void updateEnemies() {
-        for (Enemy e : enemieswait) {
-            if (e.onscreen())
-                if (enemiesgo.indexOf(e) == -1)
-                    enemiesgo.add(e);
+    public void updateActors() {
+        for (Actor a : actorwait) {
+            if (a.onscreen())
+                if (actorgo.indexOf(a) == -1)
+                    actorgo.add(a);
         }
 
-        for (Enemy e : enemiesgo)
-            e.update();
+        for (Actor a : actorgo)
+            a.update();
 
         try {
-            for (Enemy e : enemiesgo)
-                if (!e.alive) {
-                    this.enemiesgo.remove(e);
-                    this.enemieswait.remove(e);
+            for (Actor a : actorgo)
+                if (!a.alive) {
+                    actorgo.remove(a);
+                    actorwait.remove(a);
                 }
-        } catch (ConcurrentModificationException ex) {}
-    }
-
-    public void updateNPCs() {
-        for (NonPlayer n : npcwait) {
-            if (n.onscreen())
-                if (npcgo.indexOf(n) == -1)
-                    npcgo.add(n);
-        }
-
-        for (NonPlayer n : npcgo)
-            n.update();
-
-        try {
-            for (NonPlayer n : npcgo)
-                if (!n.alive) {
-                    this.npcgo.remove(n);
-                    this.npcwait.remove(n);
-                }
-        } catch (ConcurrentModificationException ex) {}
+        } catch (ConcurrentModificationException e) {}
     }
 
     public void checkCollide() {
         checkPlayerCollide();
-        checkEnemyCollide();
-        checkNPCCollide();
-        checkPlayerEnemyCollide();
-        checkPlayerNPCCollide();
+        checkActorCollide();
+        checkPlayerActorCollide();
     }
 
     public void checkPlayerCollide() {
@@ -194,42 +169,22 @@ class Level implements CameraDrawable {
         }
     }
 
-    public void checkEnemyCollide() {
-        for (Enemy e : enemiesgo) {
-            e.ground = false;
-            e.rightwall = false;
-            e.leftwall = false;
-            e.ceiling = false;
+    public void checkActorCollide() {
+        for (Actor a : actorgo) {
+            a.ground = false;
+            a.rightwall = false;
+            a.leftwall = false;
+            a.ceiling = false;
 
             for (Block b : map.map) {
-                e.checkCollide(b);
+                a.checkCollide(b);
             }
         }
     }
 
-    public void checkNPCCollide() {
-        for (NonPlayer n : npcgo) {
-            n.ground = false;
-            n.rightwall = false;
-            n.leftwall = false;
-            n.ceiling = false;
-
-            for (Block b : map.map) {
-                n.checkCollide(b);
-            }
-        }
-    }
-
-    public void checkPlayerEnemyCollide() {
-        for (Enemy e : enemiesgo) {
-            this.player.checkCollide(e);
-        }
-    }
-
-    public void checkPlayerNPCCollide() {
-        for (NonPlayer n : npcgo) {
-            this.player.checkCollide(n);
-        }
+    public void checkPlayerActorCollide() {
+        for (Actor a : actorgo)
+            this.player.checkCollide(a);
     }
 
     public Point onBlock() {
@@ -243,15 +198,12 @@ class Level implements CameraDrawable {
 
     @Override
     public ArrayList<Artifact> getArtifacts() {
-        ArrayList<Artifact> tmp = new ArrayList<Artifact>(3 + enemiesgo.size()
-                + npcgo.size());
+        ArrayList<Artifact> tmp = new ArrayList<Artifact>(3 + actorgo.size());
 
         tmp.add(new Artifact(0, 0, genbackground));
         tmp.addAll(map.getArtifacts());
-        for (Enemy e : enemiesgo)
-            tmp.addAll(e.getArtifacts());
-        for (NonPlayer n : npcgo)
-            tmp.addAll(n.getArtifacts());
+        for (Actor a : actorgo)
+            tmp.addAll(a.getArtifacts());
         tmp.addAll(player.getArtifacts());
 
         return tmp;
