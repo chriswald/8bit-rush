@@ -89,7 +89,7 @@ class Level implements CameraDrawable {
                     enemy.velx = Integer.parseInt(toks[4]);
                     enemy.vely = Integer.parseInt(toks[5]);
                     this.actorwait.add(enemy);
-                } else if (line.startsWith("&")) {
+                } else if (line.startsWith("&")) { // NPC's
                     String[] toks = line.split(" ");
                     String imagefilename = toks[1];
                     int x = Integer.parseInt(toks[2]);
@@ -100,6 +100,7 @@ class Level implements CameraDrawable {
                     npc.velx = Integer.parseInt(toks[4]);
                     npc.vely = Integer.parseInt(toks[5]);
                     this.actorwait.add(npc);
+                    GameLoop.camera.addKeyListener(npc);
                 } else if (line.startsWith("//")) {
                     // Ignore lines that start with double slash
                     // These will be comments in the level files
