@@ -125,9 +125,9 @@ $ background2.png 0 0
 //Player Info
 # player.png 1 0
 //Enemy Info
-% enemy.png 33 16 -3 0
-% enemy.png 32 16 -3 0
-% enemy.png 3 3 3 0
-% enemy.png 4 3 3 0
+% enemy.png 33 16 -2 0
+% enemy.png 32 16 -2 0
+% enemy.png 3 2 3 0
+% enemy.png 4 2 3 0
 //NPC Info
 & npc.png 3 6 0 0

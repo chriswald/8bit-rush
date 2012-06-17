@@ -247,7 +247,6 @@ class Player extends Character implements CameraDrawable, KeyListener {
 
         if (c.ID.equals("nonplayer")) {
             ((NonPlayer) c).interact();
-            System.out.println("Interacting");
         }
     }
 

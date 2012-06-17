@@ -4,7 +4,6 @@ import java.awt.image.BufferedImage;
 
 class Menu {
     public BufferedImage img;
-    public boolean       showing = true;
     public int           posx, posy;
 
     public Menu() {

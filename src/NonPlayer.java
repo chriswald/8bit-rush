@@ -6,26 +6,33 @@ class NonPlayer extends Character {
 
     public Tree<Menu> menus       = new Tree<Menu>();
     public Menu       currentmenu = new Menu();
+    public boolean    showingmenu = false;
+    public long       showtime;
 
     public NonPlayer(String filename) {
         super(filename);
         ID = "nonplayer";
 
+        this.rightside = true;
+        this.leftside = true;
+        this.topside = true;
+        this.bottomside = true;
         this.menus.root = new Node<Menu>();
         this.menus.root.data = currentmenu;
     }
 
     @Override
     public void interact() {
-        currentmenu.showing = true;
+        showingmenu = true;
         currentmenu.setLocation((int) this.posx - 25, (int) this.posy - 40);
+        showtime = System.currentTimeMillis();
     }
 
     @Override
     public ArrayList<Artifact> getArtifacts() {
         ArrayList<Artifact> tmp = new ArrayList<Artifact>(1);
         tmp.add(new Artifact((int) this.posx, (int) this.posy, this.img));
-        if (currentmenu.showing)
+        if (showingmenu)
             tmp.add(new Artifact((int) this.posx - 25, (int) this.posy - 70,
                     this.currentmenu.img));
 
@@ -62,7 +69,8 @@ class NonPlayer extends Character {
         posx += velx;
         posy += vely;
 
-        this.currentmenu.showing = false;
+        if (System.currentTimeMillis() - showtime > 1000)
+            this.showingmenu = false;
     }
 
     @Override
