@@ -22,6 +22,13 @@ class Enemy extends Actor {
 
     }
 
+    public boolean onscreen() {
+        return (this.posx < GameLoop.camera.posx + GameLoop.SCREENW
+                && this.posx + this.width > GameLoop.camera.posx
+                && this.posy < GameLoop.camera.posy + GameLoop.SCREENH && this.posy
+                + this.height > GameLoop.camera.posy);
+    }
+
     @Override
     public void update() {
         if (ground) {

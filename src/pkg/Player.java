@@ -40,6 +40,14 @@ class Player extends Character implements CameraDrawable, KeyListener {
         handlerunning();
 
         move();
+
+        checkbounds();
+    }
+
+    public void checkbounds() {
+        if (posx + width < 0 || posx > GameLoop.l.widthpx || posy + height < 0
+                || posy > GameLoop.l.heightpx)
+            this.die();
     }
 
     private void handlejumping() {
@@ -238,6 +246,10 @@ class Player extends Character implements CameraDrawable, KeyListener {
                 this.die();
             }
         }
+
+        if (c.ID.equals("nonplayer")) {
+            ((NonPlayer) c).interact();
+        }
     }
 
     @Override
@@ -247,7 +259,24 @@ class Player extends Character implements CameraDrawable, KeyListener {
     public void die() {
         try {
             System.out.println("YOU DIED");
-            Thread.sleep(1000);
+            Thread.sleep(500);
+
+            // Give it a Mario-eque death sequence.
+            int yvel = -10;
+            while (posy < GameLoop.camera.posy + GameLoop.SCREENH) {
+                long starttime = System.currentTimeMillis();
+                this.posy += yvel;
+                yvel++;
+                GameLoop.camera.update(GameLoop.l.getArtifacts());
+                GameLoop.camera.repaint();
+                long endtime = System.currentTimeMillis();
+
+                long sleeptime = (1000 / 30) - (endtime - starttime);
+                if (sleeptime > 0)
+                    Thread.sleep(sleeptime);
+            }
+
+            Thread.sleep(500);
             System.exit(0);
         } catch (InterruptedException e) {}
     }

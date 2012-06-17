@@ -14,18 +14,18 @@ import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
 class Level implements CameraDrawable {
-    public int                      widthpx;
-    public int                      heightpx;
-    public int                      blockwidthpx;
-    public int                      blockheightpx;
+    public int              widthpx;
+    public int              heightpx;
+    public int              blockwidthpx;
+    public int              blockheightpx;
 
-    public Map                      map;
-    public ArrayList<BufferedImage> backgrounds = new ArrayList<BufferedImage>();
-    public BufferedImage            genbackground;
+    public Map              map;
+    public BufferedImage    genbackground;
 
-    public Player                   player;
+    public Player           player;
 
-    public ArrayList<Enemy>         enemies     = new ArrayList<Enemy>();
+    public ArrayList<Enemy> enemiesgo   = new ArrayList<Enemy>();
+    public ArrayList<Enemy> enemieswait = new ArrayList<Enemy>();
 
     public Level(String filename) {
         try {
@@ -65,9 +65,14 @@ class Level implements CameraDrawable {
                 } else if (line.startsWith("$")) { // Background images
                     String[] toks = line.split(" ");
                     try {
-                        backgrounds.add(ImageIO.read(new File(GameLoop.RESDIR
-                                + GameLoop.IMGDIR + toks[1])));
-                        this.generateBackground();
+                        if (genbackground == null)
+                            genbackground = new BufferedImage(this.widthpx,
+                                    this.heightpx, BufferedImage.TYPE_INT_ARGB);
+                        this.generateBackground(
+                                ImageIO.read(new File(GameLoop.RESDIR
+                                        + GameLoop.IMGDIR + toks[1])),
+                                Integer.parseInt(toks[2]),
+                                Integer.parseInt(toks[3]));
                     } catch (IOException e) {
                         System.err.println("Cannot load the background image "
                                 + toks[1]);
@@ -85,10 +90,12 @@ class Level implements CameraDrawable {
                     enemy.posy = y * this.blockheightpx;
                     enemy.velx = Integer.parseInt(toks[4]);
                     enemy.vely = Integer.parseInt(toks[5]);
-                    this.enemies.add(enemy);
+                    this.enemieswait.add(enemy);
                 } else if (line.startsWith("//")) {
                     // Ignore lines that start with double slash
                     // These will be comments in the level files
+                } else {
+                    System.err.println("Warning: Unrecognized line - " + line);
                 }
             }
 
@@ -99,18 +106,13 @@ class Level implements CameraDrawable {
         }
     }
 
-    public void generateBackground() {
-        genbackground = new BufferedImage(this.widthpx, this.heightpx,
-                BufferedImage.TYPE_INT_ARGB);
+    public void generateBackground(BufferedImage img, int x, int y) {
         Graphics g = genbackground.getGraphics();
 
-        for (BufferedImage b : backgrounds) {
-            int x = 0;
-            do {
-                g.drawImage(b, x, 0, null);
-                x += b.getWidth();
-            } while (x < widthpx);
-        }
+        do {
+            g.drawImage(img, x, y, null);
+            x += img.getWidth();
+        } while (x < widthpx);
     }
 
     public void update() {
@@ -123,12 +125,21 @@ class Level implements CameraDrawable {
     }
 
     public void updateEnemies() {
-        for (Enemy e : enemies)
+        for (Enemy e : enemieswait) {
+            if (e.onscreen())
+                if (enemiesgo.indexOf(e) == -1)
+                    enemiesgo.add(e);
+        }
+
+        for (Enemy e : enemiesgo)
             e.update();
+
         try {
-            for (Enemy e : enemies)
-                if (!e.alive)
-                    this.enemies.remove(e);
+            for (Enemy e : enemiesgo)
+                if (!e.alive) {
+                    this.enemiesgo.remove(e);
+                    this.enemieswait.remove(e);
+                }
         } catch (ConcurrentModificationException ex) {}
     }
 
@@ -150,7 +161,7 @@ class Level implements CameraDrawable {
     }
 
     public void checkEnemyCollide() {
-        for (Enemy e : enemies) {
+        for (Enemy e : enemiesgo) {
             e.ground = false;
             e.rightwall = false;
             e.leftwall = false;
@@ -163,13 +174,9 @@ class Level implements CameraDrawable {
     }
 
     public void checkPlayerEnemyCollide() {
-        for (Enemy e : enemies) {
+        for (Enemy e : enemiesgo) {
             this.player.checkCollide(e);
         }
-    }
-
-    public void killEnemy(Enemy e) {
-        this.enemies.remove(e);
     }
 
     public Point onBlock() {
@@ -183,11 +190,11 @@ class Level implements CameraDrawable {
 
     @Override
     public ArrayList<Artifact> getArtifacts() {
-        ArrayList<Artifact> tmp = new ArrayList<Artifact>(3);
+        ArrayList<Artifact> tmp = new ArrayList<Artifact>(3 + enemiesgo.size());
 
         tmp.add(new Artifact(0, 0, genbackground));
         tmp.addAll(map.getArtifacts());
-        for (Enemy e : enemies)
+        for (Enemy e : enemiesgo)
             tmp.addAll(e.getArtifacts());
         tmp.addAll(player.getArtifacts());
 
