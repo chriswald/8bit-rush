@@ -24,23 +24,33 @@ class NonPlayer extends Character implements KeyListener {
         this.leftside = true;
         this.topside = true;
         this.bottomside = true;
-        buildtmpmenu();
+        buildMenu();
         currentmenu = this.menu.getRoot();
 
-        draw();
+        drawMenu();
     }
 
-    public void buildtmpmenu() {
+    public void buildMenu() {
         this.menu.setRoot(new Node<MenuEntry>(new MenuEntry("Hello!")));
+        this.menu.root.addChild(new Node<MenuEntry>(new MenuEntry("Talk")));
         this.menu.root
-                .addChild(new Node<MenuEntry>(
-                        new MenuEntry("Talk",
-                                "I used to be an adventurer like you before I developed weak wrists.")));
-        this.menu.root.addChild(new Node<MenuEntry>(new MenuEntry("Walk",
-                "No, I don't feel like going anywhere.")));
+                .getChild(0)
+                .addChild(
+                        new MenuEntry("Introduction",
+                                "I used to be an adventurer like you before I developed weak wrists."));
+        this.menu.root
+                .getChild(0)
+                .addChild(
+                        new MenuEntry(
+                                "About this place",
+                                "I'm told this is a free-form world where you can test your skills."
+                                        + " There exist only a few enemies for you to practice on and a few "
+                                        + "characters for you to interact with. Whatever that means..."));
+        this.menu.root.addChild(new MenuEntry("Walk",
+                "I don't really feel like going anywhere."));
     }
 
-    public void draw() {
+    public void drawMenu() {
         // Start with a default width of 150 and a default height of 14.
         // Define a scalar value for the width of a character.
         // Define a list of strings to store lines of the NPC's talk text as it
@@ -158,6 +168,8 @@ class NonPlayer extends Character implements KeyListener {
     public void interact() {
         showingmenu = true;
         showtime = System.currentTimeMillis();
+        posx -= velx;
+        posy -= vely;
     }
 
     @Override
@@ -204,6 +216,8 @@ class NonPlayer extends Character implements KeyListener {
         if (System.currentTimeMillis() - showtime > 2000) {
             this.showingmenu = false;
             this.currentmenu = this.menu.getRoot();
+            this.selectedchild = 0;
+            drawMenu();
         }
     }
 
@@ -239,7 +253,7 @@ class NonPlayer extends Character implements KeyListener {
                     this.selectedchild--;
                     if (this.selectedchild < 0)
                         this.selectedchild = this.currentmenu.getNumChildren() - 1;
-                    draw();
+                    drawMenu();
                     this.showtime = System.currentTimeMillis();
                 }
                 break;
@@ -248,7 +262,7 @@ class NonPlayer extends Character implements KeyListener {
                 if (this.currentmenu.hasChildren()) {
                     this.selectedchild = (this.selectedchild + 1)
                             % this.currentmenu.getNumChildren();
-                    draw();
+                    drawMenu();
                     this.showtime = System.currentTimeMillis();
                 }
                 break;
@@ -257,7 +271,7 @@ class NonPlayer extends Character implements KeyListener {
             case KeyEvent.VK_ENTER:
                 if (currentmenu.hasChildren()) {
                     this.currentmenu = this.currentmenu.getChild(selectedchild);
-                    draw();
+                    drawMenu();
                 }
                 break;
             case KeyEvent.VK_J:
@@ -266,7 +280,7 @@ class NonPlayer extends Character implements KeyListener {
                 if (this.currentmenu.getParent() != null) {
                     this.currentmenu = this.currentmenu.getParent();
                 }
-                draw();
+                drawMenu();
                 break;
             default:
                 break;

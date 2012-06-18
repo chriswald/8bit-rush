@@ -44,6 +44,13 @@ class Node<T> {
         this.children.add(child);
     }
 
+    public void addChild(T child) {
+        Node<T> tmp = new Node<T>();
+        tmp.setParent(this);
+        tmp.data = child;
+        this.children.add(tmp);
+    }
+
     public void insertChild(int index, Node<T> child)
             throws IndexOutOfBoundsException {
         child.setParent(this);

@@ -16,7 +16,7 @@ $ background2.png 0 0
 @ block2.png 8 12 0101
 @ block2.png 8 13 0101
 @ block2.png 8 14 0101
-@ block2.png 8 15 0111
+@ block3.png 8 15 0111
 @ block2.png 8 16 0000
 @ block1.png 0 16 1101
 @ block1.png 10 16 1101
@@ -130,4 +130,5 @@ $ background2.png 0 0
 % enemy.png 3 2 3 0
 % enemy.png 4 2 3 0
 //NPC Info
-& npc.png 3 6 0 0
+& npc.png 3 6 0.5 0
+& npc.png 8 10 0 0

@@ -86,8 +86,8 @@ class Level implements CameraDrawable {
                     Enemy enemy = new Enemy(imagefilename);
                     enemy.posx = x * this.blockwidthpx;
                     enemy.posy = y * this.blockheightpx;
-                    enemy.velx = Integer.parseInt(toks[4]);
-                    enemy.vely = Integer.parseInt(toks[5]);
+                    enemy.velx = Double.parseDouble(toks[4]);
+                    enemy.vely = Double.parseDouble(toks[5]);
                     this.actorwait.add(enemy);
                 } else if (line.startsWith("&")) { // NPC's
                     String[] toks = line.split(" ");
@@ -97,8 +97,8 @@ class Level implements CameraDrawable {
                     NonPlayer npc = new NonPlayer(imagefilename);
                     npc.posx = x * this.blockwidthpx;
                     npc.posy = y * this.blockheightpx;
-                    npc.velx = Integer.parseInt(toks[4]);
-                    npc.vely = Integer.parseInt(toks[5]);
+                    npc.velx = Double.parseDouble(toks[4]);
+                    npc.vely = Double.parseDouble(toks[5]);
                     this.actorwait.add(npc);
                     GameLoop.camera.addKeyListener(npc);
                 } else if (line.startsWith("//")) {
@@ -113,6 +113,7 @@ class Level implements CameraDrawable {
             System.err.println(e.getLocalizedMessage());
             JOptionPane.showMessageDialog(null, "Could not load level file: "
                     + filename + "\nReinstalling the game may fix this.");
+            System.exit(1);
         }
     }
 
@@ -157,6 +158,7 @@ class Level implements CameraDrawable {
         checkPlayerCollide();
         checkActorCollide();
         checkPlayerActorCollide();
+        checkActorActorCollide();
     }
 
     public void checkPlayerCollide() {
@@ -186,6 +188,15 @@ class Level implements CameraDrawable {
     public void checkPlayerActorCollide() {
         for (Actor a : actorgo)
             this.player.checkCollide(a);
+    }
+
+    public void checkActorActorCollide() {
+        for (Actor now : actorgo) {
+            for (Actor a : actorgo) {
+                if (now != a)
+                    now.checkCollide(a);
+            }
+        }
     }
 
     public Point onBlock() {
