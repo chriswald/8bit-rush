@@ -5,6 +5,9 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 class NonPlayer extends Character implements KeyListener {
@@ -15,6 +18,10 @@ class NonPlayer extends Character implements KeyListener {
     public long            showtime;
     public Node<MenuEntry> currentmenu;
     public int             selectedchild = 0;
+    public double          initvelx      = 0;
+    public double          initvely      = 0;
+
+    public static String   DLGEXTENSION  = ".dlg";
 
     public NonPlayer(String filename) {
         super(filename);
@@ -31,23 +38,50 @@ class NonPlayer extends Character implements KeyListener {
     }
 
     public void buildMenu() {
-        this.menu.setRoot(new Node<MenuEntry>(new MenuEntry("Hello!")));
-        this.menu.root.addChild(new Node<MenuEntry>(new MenuEntry("Talk")));
-        this.menu.root
-                .getChild(0)
-                .addChild(
-                        new MenuEntry("Introduction",
-                                "I used to be an adventurer like you before I developed weak wrists."));
-        this.menu.root
-                .getChild(0)
-                .addChild(
-                        new MenuEntry(
-                                "About this place",
-                                "I'm told this is a free-form world where you can test your skills."
-                                        + " There exist only a few enemies for you to practice on and a few "
-                                        + "characters for you to interact with. Whatever that means..."));
-        this.menu.root.addChild(new MenuEntry("Walk",
-                "I don't really feel like going anywhere."));
+        try {
+            BufferedReader in = new BufferedReader(new FileReader(
+                    GameLoop.RESDIR + GameLoop.DLGDIR + file + DLGEXTENSION));
+            String line = "";
+            String curtitle = "";
+            int tabs = 0;
+            while ((line = in.readLine()) != null) {
+                while (line.startsWith("\t") || line.startsWith("       ")
+                        || line.startsWith("    ")) {
+                    tabs++;
+
+                    if (line.startsWith("\t"))
+                        line = line.substring(1);
+                    else if (line.startsWith("       "))
+                        line = line.substring(7);
+                    else if (line.startsWith("    "))
+                        line = line.substring(4);
+                }
+
+                if (tabs == 0) {
+                    curtitle = line.substring(1);
+                    menu.root = new Node<MenuEntry>(new MenuEntry(curtitle, ""));
+                } else {
+                    Node<MenuEntry> current = menu.getRoot();
+                    for (int i = tabs; i > 1; i--) {
+                        current = current.getLastChild();
+                    }
+
+                    if (line.startsWith("^")) {
+                        curtitle = line.substring(1);
+                        current.addChild(new MenuEntry(curtitle, ""));
+                    } else {
+                        current.data.text = line;
+                    }
+                }
+
+                tabs = 0;
+            }
+        } catch (IOException e) {
+            System.err.println("Cannot load the dialogue file for the NPC.\n"
+                    + file + "\n" + e.getLocalizedMessage());
+            System.exit(1);
+        }
+
     }
 
     public void drawMenu() {

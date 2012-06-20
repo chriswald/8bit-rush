@@ -31,6 +31,17 @@ class Node<T> {
         return this.children.get(index);
     }
 
+    public Node<T> getFirstChild() {
+        return this.children.get(0);
+    }
+
+    public Node<T> getLastChild() {
+        if (this.hasChildren())
+            return this.children.get(this.children.size() - 1);
+        else
+            return null;
+    }
+
     public Node<T> getParent() {
         return this.parent;
     }

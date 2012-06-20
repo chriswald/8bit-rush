@@ -1,0 +1,23 @@
+<html>
+<body>
+  <h1>Dialogue File (.dlg) Specifications</h1>
+  <p>Dialogue Files are used to build the dialogue tree of a Non
+  Player Character (NPC). The name of a dialogue file must be the same
+  as the name of the image used for the NPC.</p>
+
+  <h2>Formatting Specifications</h2>
+  <p>The first line of the file is always the Title of the root
+  node. Lines that contain Title text are denoted by beginning with
+  '^'. Lines of body text have no denoting character. Nesting is
+  denoted by number of indentations (see note on indentation
+  below). For example, the root node, being the first line, has no
+  indentation, but every child of that root node should be indented
+  once. A line's parent will be the closest previous line which has
+  one less level of indentation.</p>
+
+  <h2>Notes</h2>
+  <p>One level of indentation is defined as either one tab (read as
+  '\t'), or four or seven spaces.</p>
+
+</body>
+</html>

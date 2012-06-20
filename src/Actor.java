@@ -6,22 +6,24 @@ import javax.imageio.ImageIO;
 
 abstract class Actor extends Collider implements Interactable, CameraDrawable {
     public BufferedImage img;
-    public String        imgfile = "";
+    public String        file         = "";
 
-    public boolean       alive   = true;
+    public boolean       alive        = true;
     public boolean       rightwall, leftwall, ground, ceiling;
 
+    public static String IMGEXTENSION = ".png";
+
     public Actor(String filename) {
-        imgfile = filename;
+        file = filename;
         ID = "actor";
 
-        filename = GameLoop.RESDIR + GameLoop.IMGDIR + imgfile;
+        filename = GameLoop.RESDIR + GameLoop.IMGDIR + file;
         img = new BufferedImage(10, 20, BufferedImage.TYPE_INT_ARGB);
         try {
-            img = ImageIO.read(new File(filename));
+            img = ImageIO.read(new File(filename + IMGEXTENSION));
         } catch (IOException e) {
             System.err.println("Cannot load the image file for the player.\n"
-                    + filename + "\n" + e.getLocalizedMessage());
+                    + filename + ".png\n" + e.getLocalizedMessage());
             drawPlayer();
         }
 

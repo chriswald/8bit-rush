@@ -97,8 +97,10 @@ class Level implements CameraDrawable {
                     NonPlayer npc = new NonPlayer(imagefilename);
                     npc.posx = x * this.blockwidthpx;
                     npc.posy = y * this.blockheightpx;
-                    npc.velx = Double.parseDouble(toks[4]);
-                    npc.vely = Double.parseDouble(toks[5]);
+                    npc.initvelx = Double.parseDouble(toks[4]);
+                    npc.initvely = Double.parseDouble(toks[5]);
+                    npc.velx = npc.initvelx;
+                    npc.vely = npc.initvely;
                     this.actorwait.add(npc);
                     GameLoop.camera.addKeyListener(npc);
                 } else if (line.startsWith("//")) {

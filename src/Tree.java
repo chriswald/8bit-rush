@@ -3,6 +3,10 @@ import java.util.ArrayList;
 class Tree<T> {
     public Node<T> root;
 
+    public Tree() {
+        root = new Node<T>();
+    }
+
     public Node<T> getRoot() {
         return this.root;
     }

@@ -5,6 +5,7 @@ class GameLoop {
     public static String IMGDIR  = "img/";
     public static String SNDDIR  = "snd/";
     public static String LVLDIR  = "lvl/";
+    public static String DLGDIR  = "dlg/";
 
     public static Camera camera;
     public static Level  l;
@@ -17,7 +18,7 @@ class GameLoop {
         SCREENH = Toolkit.getDefaultToolkit().getScreenSize().height;
 
         camera = new Camera();
-        l = new Level("lvl1.txt");
+        l = new Level("lvl1.lvl");
         camera.setLevel(l);
 
         camera.setVisible(true);

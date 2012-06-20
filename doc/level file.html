@@ -64,7 +64,7 @@
     <tr>
       <td>Non-Player Character Info</td>
       <td>&</td>
-      <td>Image's file name</td>
+      <td>NPC's name</td>
       <td>X position of NPC (See notes)</td>
       <td>Y position of NPC (See notes)</td>
       <td>X velocity of NPC (See notes)</td>
@@ -117,7 +117,12 @@
   starts, and their initial X and Y velocity. X and Y placement is
   defined in number of blocks from the upper left corner of the
   level. X and Y velocity is defined in pixels per update. Updates are
-  timed to occur roughly once every 1/30 sec.</p>
+  timed to occur roughly once every 1/30 sec. The name provided will
+  be used to load both the NPC's image and dialogue files and so both
+  files must have the same base name (full name without extension) as
+  the name provided. The name provided must be extensionless as the
+  program will append the appropriate extension based on the file it
+  is looking for.</p>
   <p><strong>Comment</strong> - These lines are used simply to make
   the file more readable and should be used to increase clairty. They
   are not included in line counts, and as such can occur before the
