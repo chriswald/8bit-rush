@@ -1,8 +1,11 @@
 ^Hello!
 	^Talk
 		^Introduction
-			I used to be an adventurer like you before I developed weak wrists.
+			Well met Wanderer. My name is Harry. I used to be an adventurer like you before I developed weak wrists.
 		^About this place
 			I'm told this is a free-form world where you can test your skills. There exist only a few enemies for you to practice on and a few characters for you to interact with. Whatever that means...
-	^Walk
-		I don't really feel like going anywhere
+	^Do Something
+		^Jump
+			*dojump
+		^Turn Around
+			*turn

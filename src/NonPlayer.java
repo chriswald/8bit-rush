@@ -18,10 +18,9 @@ class NonPlayer extends Character implements KeyListener {
     public long            showtime;
     public Node<MenuEntry> currentmenu;
     public int             selectedchild = 0;
-    public double          initvelx      = 0;
-    public double          initvely      = 0;
 
     public static String   DLGEXTENSION  = ".dlg";
+    public static String   ACTEXTENSION  = ".act";
 
     public NonPlayer(String filename) {
         super(filename);
@@ -70,7 +69,12 @@ class NonPlayer extends Character implements KeyListener {
                         curtitle = line.substring(1);
                         current.addChild(new MenuEntry(curtitle, ""));
                     } else {
-                        current.data.text = line;
+                        if (line.startsWith("*")) {
+                            current.data.actionfile = line.substring(1)
+                                    + ACTEXTENSION;
+                        } else {
+                            current.data.text = line;
+                        }
                     }
                 }
 
@@ -98,51 +102,65 @@ class NonPlayer extends Character implements KeyListener {
         // title and text (as opposed to just the title as part of an
         // interactable menu).
         if (!currentmenu.hasChildren()) {
-            String text = currentmenu.getData().text;
+            if (currentmenu.data.actionfile == null
+                    || currentmenu.data.actionfile.equals("")) {
+                String text = currentmenu.getData().text;
 
-            // If the pixel length of the text is greater than 250 we need to
-            // break it into lines.
-            if (text.length() * scalar > 250) {
-                // Break the line into words, set the width to 250, set up a
-                // temporary width (w) as 0, and initialize a line variable to
-                // hold the line we are currently formatting.
-                String toks[] = text.split(" ");
-                width = 250;
-                int w = 0;
-                String line = "";
+                // If the pixel length of the text is greater than 250 we need
+                // to
+                // break it into lines.
+                if (text.length() * scalar > 250) {
+                    // Break the line into words, set the width to 250, set up a
+                    // temporary width (w) as 0, and initialize a line variable
+                    // to
+                    // hold the line we are currently formatting.
+                    String toks[] = text.split(" ");
+                    width = 250;
+                    int w = 0;
+                    String line = "";
 
-                // For every word in "toks" calculate the word's pixel width. If
-                // that width plus the width of the rest of the line is greater
-                // than 250 move that word to a new line.
-                for (String s : toks) {
-                    w += (s.length() + 1) * scalar;
-                    if (w < width) {
-                        line += s + " ";
-                    } else {
-                        lines.add(line);
-                        line = s + " ";
-                        w = 0;
+                    // For every word in "toks" calculate the word's pixel
+                    // width. If
+                    // that width plus the width of the rest of the line is
+                    // greater
+                    // than 250 move that word to a new line.
+                    for (String s : toks) {
+                        w += (s.length() + 1) * scalar;
+                        if (w < width) {
+                            line += s + " ";
+                        } else {
+                            lines.add(line);
+                            line = s + " ";
+                            w = 0;
+                        }
                     }
-                }
-                // Add the last line if its not empty.
-                if (line != "")
-                    lines.add(line);
+                    // Add the last line if its not empty.
+                    if (line != "")
+                        lines.add(line);
 
-                // Determine what the new maximum line length is and set the
-                // final width to that.
-                int maxw = 0;
-                for (String s : lines) {
-                    if (s.length() * scalar > maxw)
-                        maxw = (int) (s.length() * scalar);
+                    // Determine what the new maximum line length is and set the
+                    // final width to that.
+                    int maxw = 0;
+                    for (String s : lines) {
+                        if (s.length() * scalar > maxw)
+                            maxw = (int) (s.length() * scalar);
+                    }
+                    width = maxw;
                 }
-                width = maxw;
+                // If the line's pixel length is greater than the base 150 but
+                // not
+                // the max 250 just up the width of the menu box.
+                else if (text.length() * scalar > 150) {
+                    width = (int) (text.length() * scalar);
+                    lines.add(text);
+                } else {
+                    lines.add(text);
+                }
+                height += 14 * lines.size() + 1;
+            } else {
+                ActParse.run(currentmenu.data.actionfile, this);
+                this.showingmenu = false;
             }
-            // If the line's pixel length is greater than the base 150 but not
-            // the max 250 just up the width of the menu box.
-            else if (text.length() * scalar > 150) {
-                width = (int) (text.length() * scalar);
-            }
-            height += 14 * lines.size() + 1;
         }
         // If the node has children calculate the pixel length of the longest
         // title string among those children.
@@ -202,8 +220,6 @@ class NonPlayer extends Character implements KeyListener {
     public void interact() {
         showingmenu = true;
         showtime = System.currentTimeMillis();
-        posx -= velx;
-        posy -= vely;
     }
 
     @Override
@@ -220,15 +236,12 @@ class NonPlayer extends Character implements KeyListener {
     @Override
     public void drawPlayer() {
         Graphics g = img.getGraphics();
-        g.setColor(Color.blue);
+        g.setColor(Color.yellow);
         g.fillRect(0, 0, img.getWidth(), img.getHeight());
     }
 
     @Override
-    public void die() {
-        // TODO Auto-generated method stub
-
-    }
+    public void die() {}
 
     @Override
     public void update() {
@@ -239,7 +252,9 @@ class NonPlayer extends Character implements KeyListener {
         }
 
         if (rightwall || leftwall)
-            velx = -velx;
+            velx = 0;
+        else
+            velx = initvelx;
 
         if (vely > this.height / 2)
             vely = this.height / 2;
@@ -259,9 +274,11 @@ class NonPlayer extends Character implements KeyListener {
     public void onCollide(CollidedSide side, Collider c) {
         switch (side) {
         case BOTTOM:
-            this.posy = c.posy - this.height;
-            this.vely = 0;
-            this.ground = true;
+            if (this.vely > 0) {
+                this.posy = c.posy - this.height;
+                this.vely = 0;
+                this.ground = true;
+            }
             break;
         case RIGHT:
             this.rightwall = true;

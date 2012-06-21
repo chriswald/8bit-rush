@@ -92,8 +92,8 @@ class Level implements CameraDrawable {
                 } else if (line.startsWith("&")) { // NPC's
                     String[] toks = line.split(" ");
                     String imagefilename = toks[1];
-                    int x = Integer.parseInt(toks[2]);
-                    int y = Integer.parseInt(toks[3]);
+                    double x = Double.parseDouble(toks[2]);
+                    double y = Double.parseDouble(toks[3]);
                     NonPlayer npc = new NonPlayer(imagefilename);
                     npc.posx = x * this.blockwidthpx;
                     npc.posy = y * this.blockheightpx;

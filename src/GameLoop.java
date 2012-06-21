@@ -6,6 +6,7 @@ class GameLoop {
     public static String SNDDIR  = "snd/";
     public static String LVLDIR  = "lvl/";
     public static String DLGDIR  = "dlg/";
+    public static String ACTDIR  = "act/";
 
     public static Camera camera;
     public static Level  l;
@@ -34,6 +35,8 @@ class GameLoop {
             long endtime = System.currentTimeMillis();
 
             try {
+                // To make sure updates are consistent subtract the time it took
+                // for the code to run from 1/30th of a second.
                 long sleeptime = (1000 / 30) - (endtime - starttime);
                 if (sleeptime > 0)
                     Thread.sleep(sleeptime);
