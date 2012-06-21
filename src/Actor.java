@@ -11,6 +11,8 @@ abstract class Actor extends Collider implements Interactable, CameraDrawable {
     public boolean       alive        = true;
     public boolean       rightwall, leftwall, ground, ceiling;
 
+    public double        initvelx, initvely;
+
     public static String IMGEXTENSION = ".png";
 
     public Actor(String filename) {
