@@ -7,5 +7,5 @@
 	^Do Something
 		^Jump
 			*dojump
-		^Turn Around
+		^Turn and run!
 			*turn

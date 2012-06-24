@@ -27,8 +27,8 @@ class Level implements CameraDrawable {
 
     public Level(String filename) {
         try {
-            BufferedReader in = new BufferedReader(new FileReader(
-                    GameLoop.RESDIR + GameLoop.LVLDIR + filename));
+            BufferedReader in = new BufferedReader(new FileReader(G.RESDIR
+                    + G.LVLDIR + filename));
             String line;
             while ((line = in.readLine()) != null) {
                 if (line.startsWith("!")) { // Header info
@@ -48,8 +48,8 @@ class Level implements CameraDrawable {
                     int y = Integer.parseInt(toks[3]);
                     String c = toks[4];
 
-                    BufferedImage tmp = ImageIO.read(new File(GameLoop.RESDIR
-                            + GameLoop.IMGDIR + imagefilename));
+                    BufferedImage tmp = ImageIO.read(new File(G.RESDIR
+                            + G.IMGDIR + imagefilename));
                     map.add(new Block(tmp, x, y, c));
                 } else if (line.startsWith("#")) { // Player info
                     String[] toks = line.split(" ");
@@ -59,7 +59,7 @@ class Level implements CameraDrawable {
                     this.player = new Player(imagefilename);
                     this.player.posx = x * this.blockwidthpx;
                     this.player.posy = y * this.blockheightpx;
-                    GameLoop.camera.addKeyListener(this.player);
+                    G.camera.addKeyListener(this.player);
                 } else if (line.startsWith("$")) { // Background images
                     String[] toks = line.split(" ");
                     try {
@@ -67,9 +67,8 @@ class Level implements CameraDrawable {
                             genbackground = new BufferedImage(this.widthpx,
                                     this.heightpx, BufferedImage.TYPE_INT_ARGB);
                         this.generateBackground(
-                                ImageIO.read(new File(GameLoop.RESDIR
-                                        + GameLoop.IMGDIR + toks[1])),
-                                Integer.parseInt(toks[2]),
+                                ImageIO.read(new File(G.RESDIR + G.IMGDIR
+                                        + toks[1])), Integer.parseInt(toks[2]),
                                 Integer.parseInt(toks[3]));
                     } catch (IOException e) {
                         System.err.println("Cannot load the background image "
@@ -102,7 +101,7 @@ class Level implements CameraDrawable {
                     npc.velx = npc.initvelx;
                     npc.vely = npc.initvely;
                     this.actorwait.add(npc);
-                    GameLoop.camera.addKeyListener(npc);
+                    G.camera.addKeyListener(npc);
                 } else if (line.startsWith("//")) {
                     // Ignore lines that start with double slash
                     // These will be comments in the level files

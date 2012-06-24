@@ -38,8 +38,8 @@ class NonPlayer extends Character implements KeyListener {
 
     public void buildMenu() {
         try {
-            BufferedReader in = new BufferedReader(new FileReader(
-                    GameLoop.RESDIR + GameLoop.DLGDIR + file + DLGEXTENSION));
+            BufferedReader in = new BufferedReader(new FileReader(G.RESDIR
+                    + G.DLGDIR + file + DLGEXTENSION));
             String line = "";
             String curtitle = "";
             int tabs = 0;
@@ -251,10 +251,8 @@ class NonPlayer extends Character implements KeyListener {
             vely += .5;
         }
 
-        if (rightwall || leftwall)
-            velx = 0;
-        else
-            velx = initvelx;
+        if (!rightwall && !leftwall)
+            velx = -velx;
 
         if (vely > this.height / 2)
             vely = this.height / 2;
@@ -281,9 +279,17 @@ class NonPlayer extends Character implements KeyListener {
             }
             break;
         case RIGHT:
+            if (c.ID.equals("player"))
+                this.velx = 0;
+            else
+                this.velx = -this.velx;
             this.rightwall = true;
             break;
         case LEFT:
+            if (c.ID.equals("player"))
+                this.velx = 0;
+            else
+                this.velx = -this.velx;
             this.leftwall = true;
             break;
         case TOP:
@@ -322,6 +328,7 @@ class NonPlayer extends Character implements KeyListener {
             case KeyEvent.VK_ENTER:
                 if (currentmenu.hasChildren()) {
                     this.currentmenu = this.currentmenu.getChild(selectedchild);
+                    selectedchild = 0;
                     drawMenu();
                 }
                 break;
@@ -330,6 +337,7 @@ class NonPlayer extends Character implements KeyListener {
             case KeyEvent.VK_BACK_SPACE:
                 if (this.currentmenu.getParent() != null) {
                     this.currentmenu = this.currentmenu.getParent();
+                    selectedchild = 0;
                 }
                 drawMenu();
                 break;

@@ -23,18 +23,18 @@ class Camera extends JFrame implements KeyListener {
     }
 
     public void setPostition(Player p) {
-        posx = p.getMid().x - (GameLoop.SCREENW / 2);
-        posy = p.getMid().y - (3 * GameLoop.SCREENH / 4);
+        posx = p.getMid().x - (G.SCREENW / 2);
+        posy = p.getMid().y - (3 * G.SCREENH / 4);
 
         if (posx < 0)
             posx = 0;
-        if (posx + GameLoop.SCREENW > todraw.getWidth())
-            posx = todraw.getWidth() - GameLoop.SCREENW;
+        if (posx + G.SCREENW > todraw.getWidth())
+            posx = todraw.getWidth() - G.SCREENW;
 
         if (posy < 0)
             posy = 0;
-        if (posy + GameLoop.SCREENH > todraw.getHeight())
-            posy = todraw.getHeight() - GameLoop.SCREENH;
+        if (posy + G.SCREENH > todraw.getHeight())
+            posy = todraw.getHeight() - G.SCREENH;
     }
 
     public void setLevel(Level l) {
@@ -51,8 +51,8 @@ class Camera extends JFrame implements KeyListener {
 
     @Override
     public void paint(Graphics g) {
-        g.drawImage(todraw, 0, 0, GameLoop.SCREENW, GameLoop.SCREENH, posx,
-                posy, posx + GameLoop.SCREENW, posy + GameLoop.SCREENH, null);
+        g.drawImage(todraw, 0, 0, G.SCREENW, G.SCREENH, posx, posy, posx
+                + G.SCREENW, posy + G.SCREENH, null);
     }
 
     @Override

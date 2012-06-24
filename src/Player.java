@@ -43,8 +43,8 @@ class Player extends Character implements CameraDrawable, KeyListener {
     }
 
     public void checkbounds() {
-        if (posx + width < 0 || posx > GameLoop.l.widthpx || posy + height < 0
-                || posy > GameLoop.l.heightpx)
+        if (posx + width < 0 || posx > G.l.widthpx || posy + height < 0
+                || posy > G.l.heightpx)
             this.die();
     }
 
@@ -261,12 +261,12 @@ class Player extends Character implements CameraDrawable, KeyListener {
 
             // Give it a Mario-eque death sequence.
             int yvel = -10;
-            while (posy < GameLoop.camera.posy + GameLoop.SCREENH) {
+            while (posy < G.camera.posy + G.SCREENH) {
                 long starttime = System.currentTimeMillis();
                 this.posy += yvel;
                 yvel++;
-                GameLoop.camera.update(GameLoop.l.getArtifacts());
-                GameLoop.camera.repaint();
+                G.camera.update(G.l.getArtifacts());
+                G.camera.repaint();
                 long endtime = System.currentTimeMillis();
 
                 long sleeptime = (1000 / 30) - (endtime - starttime);

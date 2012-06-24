@@ -19,7 +19,7 @@ abstract class Actor extends Collider implements Interactable, CameraDrawable {
         file = filename;
         ID = "actor";
 
-        filename = GameLoop.RESDIR + GameLoop.IMGDIR + file;
+        filename = G.RESDIR + G.IMGDIR + file;
         img = new BufferedImage(10, 20, BufferedImage.TYPE_INT_ARGB);
         try {
             img = ImageIO.read(new File(filename + IMGEXTENSION));
@@ -34,10 +34,10 @@ abstract class Actor extends Collider implements Interactable, CameraDrawable {
     }
 
     public boolean onscreen() {
-        return (this.posx < GameLoop.camera.posx + GameLoop.SCREENW
-                && this.posx + this.width > GameLoop.camera.posx
-                && this.posy < GameLoop.camera.posy + GameLoop.SCREENH && this.posy
-                + this.height > GameLoop.camera.posy);
+        return (this.posx < G.camera.posx + G.SCREENW
+                && this.posx + this.width > G.camera.posx
+                && this.posy < G.camera.posy + G.SCREENH && this.posy
+                + this.height > G.camera.posy);
     }
 
     public abstract void drawPlayer();

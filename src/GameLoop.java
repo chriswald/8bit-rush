@@ -1,37 +1,25 @@
 import java.awt.Toolkit;
 
 class GameLoop {
-    public static String RESDIR  = "res/";
-    public static String IMGDIR  = "img/";
-    public static String SNDDIR  = "snd/";
-    public static String LVLDIR  = "lvl/";
-    public static String DLGDIR  = "dlg/";
-    public static String ACTDIR  = "act/";
-
-    public static Camera camera;
-    public static Level  l;
-
-    public static int    SCREENW = Toolkit.getDefaultToolkit().getScreenSize().width;
-    public static int    SCREENH = Toolkit.getDefaultToolkit().getScreenSize().height;
 
     public static void main(String[] args) {
-        SCREENW = Toolkit.getDefaultToolkit().getScreenSize().width;
-        SCREENH = Toolkit.getDefaultToolkit().getScreenSize().height;
+        G.SCREENW = Toolkit.getDefaultToolkit().getScreenSize().width;
+        G.SCREENH = Toolkit.getDefaultToolkit().getScreenSize().height;
 
-        camera = new Camera();
-        l = new Level("lvl1.lvl");
-        camera.setLevel(l);
+        G.camera = new Camera();
+        G.l = new Level("lvl1.lvl");
+        G.camera.setLevel(G.l);
 
-        camera.setVisible(true);
+        G.camera.setVisible(true);
 
         while (true) {
             long starttime = System.currentTimeMillis();
-            l.update();
-            l.checkCollide();
+            G.l.update();
+            G.l.checkCollide();
 
-            camera.setPostition(l.player);
-            camera.update(l.getArtifacts());
-            camera.repaint();
+            G.camera.setPostition(G.l.player);
+            G.camera.update(G.l.getArtifacts());
+            G.camera.repaint();
             long endtime = System.currentTimeMillis();
 
             try {
