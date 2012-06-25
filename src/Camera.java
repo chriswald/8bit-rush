@@ -28,8 +28,20 @@ class Camera extends JFrame implements KeyListener {
     }
 
     public void setPostition(Player p) {
-        posx = p.getMid().x - (G.WINDOWW / 2);
-        posy = p.getMid().y - (2 * G.WINDOWH / 3);
+        int fudgefactor = 30;
+
+        if (p.posx - this.posx < G.WINDOWW / 2 - fudgefactor && p.velx < 0)
+            this.posx = (int) (p.posx + fudgefactor - (G.WINDOWW / 2));
+        if (p.posx - this.posx > G.WINDOWW / 2 + fudgefactor && p.velx > 0)
+            this.posx = (int) (p.posx - fudgefactor - (G.WINDOWW / 2));
+
+        if (p.posy - this.posy < 2 * G.WINDOWH / 3 - fudgefactor && p.vely < 0)
+            this.posy = (int) (p.posy + fudgefactor - (2 * G.WINDOWH / 3));
+        if (p.posy - this.posy > 2 * G.WINDOWH / 3 + fudgefactor && p.vely > 0)
+            this.posy = (int) (p.posy - fudgefactor - (2 * G.WINDOWH / 3));
+
+        // posx = p.getMid().x - (G.WINDOWW / 2);
+        // posy = p.getMid().y - (2 * G.WINDOWH / 3);
 
         if (posx < 0)
             posx = 0;
