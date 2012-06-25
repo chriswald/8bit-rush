@@ -34,9 +34,9 @@ abstract class Actor extends Collider implements Interactable, CameraDrawable {
     }
 
     public boolean onscreen() {
-        return (this.posx < G.camera.posx + G.SCREENW
+        return (this.posx < G.camera.posx + G.WINDOWW
                 && this.posx + this.width > G.camera.posx
-                && this.posy < G.camera.posy + G.SCREENH && this.posy
+                && this.posy < G.camera.posy + G.WINDOWH && this.posy
                 + this.height > G.camera.posy);
     }
 

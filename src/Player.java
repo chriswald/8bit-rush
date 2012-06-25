@@ -275,7 +275,7 @@ class Player extends Character implements CameraDrawable, KeyListener {
             }
 
             Thread.sleep(500);
-            System.exit(0);
         } catch (InterruptedException e) {}
+        G.GAMESTATE = G.State.DEATH;
     }
 }

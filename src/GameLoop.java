@@ -1,25 +1,54 @@
-import java.awt.Toolkit;
-
 class GameLoop {
 
     public static void main(String[] args) {
-        G.SCREENW = Toolkit.getDefaultToolkit().getScreenSize().width;
-        G.SCREENH = Toolkit.getDefaultToolkit().getScreenSize().height;
-
         G.camera = new Camera();
-        G.l = new Level("lvl1.lvl");
-        G.camera.setLevel(G.l);
-
         G.camera.setVisible(true);
+
+        boolean levelset = false;
+        boolean startset = false;
 
         while (true) {
             long starttime = System.currentTimeMillis();
-            G.l.update();
-            G.l.checkCollide();
+            switch (G.GAMESTATE) {
+            case STARTUP:
+                if (!startset) {
+                    G.ss = new StartScreen();
+                    G.camera.addKeyListener(G.ss);
+                    G.camera.setBufferSize(G.WINDOWW, G.WINDOWH);
+                    startset = true;
+                }
+                G.ss.update();
+                G.camera.update(G.ss.getArtifacts());
+                G.camera.repaint();
+                break;
+            case METAMAP:
+                break;
+            case SELECT:
+                break;
+            case PLAY:
+                if (!levelset) {
+                    G.l = new Level("lvl1.lvl");
+                    G.camera.setLevel(G.l);
+                    levelset = true;
+                }
+                G.l.update();
+                G.l.checkCollide();
 
-            G.camera.setPostition(G.l.player);
-            G.camera.update(G.l.getArtifacts());
-            G.camera.repaint();
+                G.camera.setPostition(G.l.player);
+                G.camera.update(G.l.getArtifacts());
+                G.camera.repaint();
+                break;
+            case PAUSE:
+                break;
+            case DEATH:
+                startset = levelset = false;
+                G.GAMESTATE = G.State.STARTUP;
+                break;
+            case CREDITS:
+                break;
+            case END:
+                break;
+            }
             long endtime = System.currentTimeMillis();
 
             try {

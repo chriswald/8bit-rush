@@ -1,4 +1,6 @@
+import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
@@ -17,29 +19,36 @@ class Camera extends JFrame implements KeyListener {
         posx = 0;
         posy = 0;
 
-        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        this.setUndecorated(true);
+        // this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        // this.setUndecorated(true);
+        this.setSize(new Dimension(G.WINDOWW, G.WINDOWH));
+        this.setLocation(new Point(G.SCREENW / 2 - G.WINDOWW / 2, G.SCREENH / 2
+                - G.WINDOWH / 2));
         this.addKeyListener(this);
     }
 
     public void setPostition(Player p) {
-        posx = p.getMid().x - (G.SCREENW / 2);
-        posy = p.getMid().y - (3 * G.SCREENH / 4);
+        posx = p.getMid().x - (G.WINDOWW / 2);
+        posy = p.getMid().y - (2 * G.WINDOWH / 3);
 
         if (posx < 0)
             posx = 0;
-        if (posx + G.SCREENW > todraw.getWidth())
-            posx = todraw.getWidth() - G.SCREENW;
+        if (posx + G.WINDOWW > todraw.getWidth())
+            posx = todraw.getWidth() - G.WINDOWW;
 
         if (posy < 0)
             posy = 0;
-        if (posy + G.SCREENH > todraw.getHeight())
-            posy = todraw.getHeight() - G.SCREENH;
+        if (posy + G.WINDOWH > todraw.getHeight())
+            posy = todraw.getHeight() - G.WINDOWH;
     }
 
     public void setLevel(Level l) {
-        todraw = new BufferedImage(l.widthpx, l.heightpx,
-                BufferedImage.TYPE_INT_ARGB);
+        setBufferSize(l.widthpx, l.heightpx);
+    }
+
+    public void setBufferSize(int w, int h) {
+        posx = posy = 0;
+        todraw = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
     }
 
     public void update(ArrayList<Artifact> artifacts) {
@@ -51,8 +60,8 @@ class Camera extends JFrame implements KeyListener {
 
     @Override
     public void paint(Graphics g) {
-        g.drawImage(todraw, 0, 0, G.SCREENW, G.SCREENH, posx, posy, posx
-                + G.SCREENW, posy + G.SCREENH, null);
+        g.drawImage(todraw, 0, 0, G.WINDOWW, G.WINDOWH, posx, posy, posx
+                + G.WINDOWW, posy + G.WINDOWH, null);
     }
 
     @Override
