@@ -15,9 +15,8 @@ $ background2.png 0 0
 @ block2.png 22 6 0101
 @ block2.png 20 7 0101
 @ block2.png 22 7 0101
-@ block2.png 20 8 0101
+@ block3.png 20 8 0111
 @ block2.png 22 8 0101
-@ block3.png 20 9 0111
 @ block3.png 22 9 0111
 @ block1.png 1 10 1011
 @ block1.png 2 10 1010
@@ -37,14 +36,11 @@ $ background2.png 0 0
 @ block2.png 8 14 0101
 @ block1.png 19 14 1111
 @ block3.png 8 15 0111
-//@ block1.png 23 15 1101
-//@ block1.png 25 15 1111
 @ block1.png 30 15 1111
 @ block1.png 0 16 1101
 @ block2.png 8 16 0000
 @ block1.png 10 16 1101
 @ block1.png 17 16 1111
-//@ block3.png 23 16 0111
 @ block2.png 0 17 0000
 @ block1.png 1 17 1000
 @ block1.png 2 17 1000
