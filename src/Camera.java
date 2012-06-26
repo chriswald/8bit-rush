@@ -23,6 +23,7 @@ class Camera extends JFrame implements KeyListener {
         this.setLocation(new Point(G.SCREENW / 2 - G.WINDOWW / 2, G.SCREENH / 2
                 - G.WINDOWH / 2));
         this.setResizable(false);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.addKeyListener(this);
     }
 
@@ -76,7 +77,7 @@ class Camera extends JFrame implements KeyListener {
     public void keyPressed(KeyEvent evt) {
         switch (evt.getKeyCode()) {
         case KeyEvent.VK_ESCAPE:
-            System.exit(0);
+            G.GAMESTATE = G.State.END;
             break;
         default:
             break;

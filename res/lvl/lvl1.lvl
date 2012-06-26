@@ -106,6 +106,7 @@ $ background2.png 0 0
 % enemy 32 16 -2 0
 % enemy 3 2 3 0
 % enemy 4 2 3 0
+% enemy 20 3 0 0
 //NPC Info
 & harry 3 6 -.5 0
 & jenna 8.33 10 0 0

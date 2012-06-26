@@ -8,7 +8,7 @@ class GameLoop {
         boolean startset = false;
         boolean addedlistener = false;
 
-        while (true) {
+        while (G.GAMESTATE != G.State.END) {
             long starttime = System.currentTimeMillis();
             switch (G.GAMESTATE) {
             case STARTUP:
@@ -52,8 +52,6 @@ class GameLoop {
                 break;
             case CREDITS:
                 break;
-            case END:
-                break;
             }
             long endtime = System.currentTimeMillis();
 
@@ -67,5 +65,8 @@ class GameLoop {
                 System.err.println(e.getLocalizedMessage());
             }
         }
+
+        G.camera.dispose();
+        System.exit(0);
     }
 }
