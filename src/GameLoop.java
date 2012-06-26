@@ -6,6 +6,7 @@ class GameLoop {
 
         boolean levelset = false;
         boolean startset = false;
+        boolean addedlistener = false;
 
         while (true) {
             long starttime = System.currentTimeMillis();
@@ -29,6 +30,10 @@ class GameLoop {
                 if (!levelset) {
                     G.l = new Level("lvl1.lvl");
                     G.camera.setLevel(G.l);
+                    if (!addedlistener) {
+                        G.camera.addMouseListener(G.l);
+                        addedlistener = true;
+                    }
                     levelset = true;
                 }
                 G.l.update();
@@ -42,6 +47,7 @@ class GameLoop {
                 break;
             case DEATH:
                 startset = levelset = false;
+                G.l.player.die();
                 G.GAMESTATE = G.State.STARTUP;
                 break;
             case CREDITS:

@@ -24,8 +24,8 @@ abstract class Actor extends Collider implements Interactable, CameraDrawable {
         try {
             img = ImageIO.read(new File(filename + IMGEXTENSION));
         } catch (IOException e) {
-            System.err.println("Cannot load the image file for the player.\n"
-                    + filename + ".png\n" + e.getLocalizedMessage());
+            System.err.println("Cannot load " + filename + ".png\n"
+                    + e.getLocalizedMessage());
             drawPlayer();
         }
 
@@ -33,11 +33,11 @@ abstract class Actor extends Collider implements Interactable, CameraDrawable {
         height = img.getHeight();
     }
 
-    public boolean onscreen() {
-        return (this.posx < G.camera.posx + G.WINDOWW
-                && this.posx + this.width > G.camera.posx
-                && this.posy < G.camera.posy + G.WINDOWH && this.posy
-                + this.height > G.camera.posy);
+    public boolean nearscreen() {
+        return (this.posx < G.camera.posx + G.WINDOWW + 50
+                && this.posx + this.width > G.camera.posx - 50
+                && this.posy < G.camera.posy + G.WINDOWH + 50 && this.posy
+                + this.height > G.camera.posy - 50);
     }
 
     public abstract void drawPlayer();

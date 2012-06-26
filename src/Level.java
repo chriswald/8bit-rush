@@ -1,5 +1,7 @@
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,7 +13,7 @@ import java.util.ConcurrentModificationException;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
-class Level implements CameraDrawable {
+class Level implements CameraDrawable, MouseListener {
     public int              widthpx;
     public int              heightpx;
     public int              blockwidthpx;
@@ -120,11 +122,16 @@ class Level implements CameraDrawable {
 
     public void generateBackground(BufferedImage img, int x, int y) {
         Graphics g = genbackground.getGraphics();
+        int initx = x;
 
         do {
-            g.drawImage(img, x, y, null);
-            x += img.getWidth();
-        } while (x < widthpx);
+            do {
+                g.drawImage(img, x, y, null);
+                x += img.getWidth();
+            } while (x < widthpx);
+            y += img.getHeight();
+            x = initx;
+        } while (y < heightpx);
     }
 
     public void update() {
@@ -138,7 +145,7 @@ class Level implements CameraDrawable {
 
     public void updateActors() {
         for (Actor a : actorwait) {
-            if (a.onscreen())
+            if (a.nearscreen())
                 if (actorgo.indexOf(a) == -1)
                     actorgo.add(a);
         }
@@ -147,11 +154,12 @@ class Level implements CameraDrawable {
             a.update();
 
         try {
-            for (Actor a : actorgo)
+            for (Actor a : actorgo) {
                 if (!a.alive) {
                     actorgo.remove(a);
                     actorwait.remove(a);
                 }
+            }
         } catch (ConcurrentModificationException e) {}
     }
 
@@ -226,4 +234,25 @@ class Level implements CameraDrawable {
     public String toString() {
         return this.getClass() + " " + widthpx + " " + heightpx;
     }
+
+    @Override
+    public void mouseClicked(MouseEvent evt) {
+        int x = G.camera.posx + evt.getX();
+        int y = G.camera.posy + evt.getY();
+
+        System.out.println((x / this.blockwidthpx) + ", "
+                + (y / this.blockheightpx));
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent evt) {}
+
+    @Override
+    public void mouseExited(MouseEvent evt) {}
+
+    @Override
+    public void mousePressed(MouseEvent evt) {}
+
+    @Override
+    public void mouseReleased(MouseEvent evt) {}
 }

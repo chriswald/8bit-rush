@@ -45,7 +45,7 @@ class Player extends Character implements CameraDrawable, KeyListener {
     public void checkbounds() {
         if (posx + width < 0 || posx > G.l.widthpx || posy + height < 0
                 || posy > G.l.heightpx)
-            this.die();
+            G.GAMESTATE = G.State.DEATH;
     }
 
     private void handlejumping() {
@@ -241,7 +241,7 @@ class Player extends Character implements CameraDrawable, KeyListener {
             case RIGHT:
             case LEFT:
             case TOP:
-                this.die();
+                G.GAMESTATE = G.State.DEATH;
             }
         }
 
@@ -257,7 +257,7 @@ class Player extends Character implements CameraDrawable, KeyListener {
     public void die() {
         try {
             System.out.println("YOU DIED");
-            Thread.sleep(500);
+            Thread.sleep(250);
 
             // Give it a Mario-eque death sequence.
             int yvel = -10;

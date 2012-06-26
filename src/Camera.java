@@ -19,11 +19,10 @@ class Camera extends JFrame implements KeyListener {
         posx = 0;
         posy = 0;
 
-        // this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        // this.setUndecorated(true);
         this.setSize(new Dimension(G.WINDOWW, G.WINDOWH));
         this.setLocation(new Point(G.SCREENW / 2 - G.WINDOWW / 2, G.SCREENH / 2
                 - G.WINDOWH / 2));
+        this.setResizable(false);
         this.addKeyListener(this);
     }
 
@@ -39,9 +38,6 @@ class Camera extends JFrame implements KeyListener {
             this.posy = (int) (p.posy + fudgefactor - (2 * G.WINDOWH / 3));
         if (p.posy - this.posy > 2 * G.WINDOWH / 3 + fudgefactor && p.vely > 0)
             this.posy = (int) (p.posy - fudgefactor - (2 * G.WINDOWH / 3));
-
-        // posx = p.getMid().x - (G.WINDOWW / 2);
-        // posy = p.getMid().y - (2 * G.WINDOWH / 3);
 
         if (posx < 0)
             posx = 0;
