@@ -44,8 +44,7 @@ class NonPlayer extends Character implements KeyListener {
             String curtitle = "";
             int tabs = 0;
             while ((line = in.readLine()) != null) {
-                while (line.startsWith("\t") || line.startsWith("       ")
-                        || line.startsWith("    ")) {
+                while (line.startsWith("\t") || line.startsWith("    ")) {
                     tabs++;
 
                     if (line.startsWith("\t"))
@@ -80,6 +79,7 @@ class NonPlayer extends Character implements KeyListener {
 
                 tabs = 0;
             }
+            in.close();
         } catch (IOException e) {
             System.err.println("Cannot load the dialogue file for the NPC.\n"
                     + file + "\n" + e.getLocalizedMessage());

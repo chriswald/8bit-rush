@@ -1,3 +1,7 @@
+/**
+ * Made with only trees felled in storms
+ */
+
 import java.util.ArrayList;
 
 class Tree<T> {

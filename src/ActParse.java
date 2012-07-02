@@ -13,6 +13,8 @@ public class ActParse {
             while ((line = in.readLine()) != null) {
                 parseCommand(line, a);
             }
+
+            in.close();
         } catch (IOException e) {
             System.err.println(e.getLocalizedMessage());
             return;

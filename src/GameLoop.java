@@ -52,6 +52,8 @@ class GameLoop {
                 break;
             case CREDITS:
                 break;
+            case END:
+                break;
             }
             long endtime = System.currentTimeMillis();
 

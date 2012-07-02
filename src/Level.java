@@ -111,7 +111,7 @@ class Level implements CameraDrawable, MouseListener {
                     System.err.println("Warning: Unrecognized line - " + line);
                 }
             }
-
+            in.close();
         } catch (IOException e) {
             System.err.println(e.getLocalizedMessage());
             JOptionPane.showMessageDialog(null, "Could not load level file: "

@@ -12,14 +12,22 @@ import javax.imageio.ImageIO;
 
 class StartScreen implements CameraDrawable, KeyListener {
     public int           posx, posy;
+    public int           arrowx, arrowy;
+    public int           STEP     = 50;
     public Artifact      back;
+    public BufferedImage arrow;
     public BufferedImage fore;
+    public boolean       anim_done;
+    public int           selected = 0;
 
     public StartScreen() {
         makeBackground();
         makeForground();
         posx = G.WINDOWW / 2 - fore.getWidth() / 2;
         posy = G.WINDOWH;
+
+        arrowx = G.WINDOWW / 4;
+        arrowy = posy + G.WINDOWH / 4;
     }
 
     public void makeBackground() {
@@ -30,6 +38,7 @@ class StartScreen implements CameraDrawable, KeyListener {
                     + "startscreen.png"));
             BufferedImage back = new BufferedImage(G.WINDOWW, G.WINDOWH,
                     BufferedImage.TYPE_INT_ARGB);
+            arrow = ImageIO.read(new File(G.RESDIR + G.IMGDIR + "arrow.png"));
 
             Calendar cal = Calendar.getInstance();
             double seconds = cal.get(Calendar.HOUR_OF_DAY) * 60 * 60
@@ -66,14 +75,16 @@ class StartScreen implements CameraDrawable, KeyListener {
     public void update() {
         if (posy > G.WINDOWH / 2 - fore.getHeight() / 2) {
             posy -= 5;
+            arrowy = (posy + G.WINDOWH / 4) + (selected * STEP);
         }
     }
 
     @Override
     public ArrayList<Artifact> getArtifacts() {
-        ArrayList<Artifact> tmp = new ArrayList<Artifact>(2);
+        ArrayList<Artifact> tmp = new ArrayList<Artifact>(3);
         tmp.add(back);
         tmp.add(new Artifact(posx, posy, fore));
+        tmp.add(new Artifact(arrowx, arrowy, arrow));
         return tmp;
     }
 
@@ -81,7 +92,19 @@ class StartScreen implements CameraDrawable, KeyListener {
     public void keyPressed(KeyEvent evt) {
         switch (evt.getKeyCode()) {
         case KeyEvent.VK_SPACE:
-            G.GAMESTATE = G.State.PLAY;
+        case KeyEvent.VK_ENTER:
+            if (selected == 0)
+                G.GAMESTATE = G.State.PLAY;
+            break;
+        case KeyEvent.VK_S:
+        case KeyEvent.VK_DOWN:
+            selected++;
+            arrowy = (posy + G.WINDOWH / 4) + (selected * STEP);
+            break;
+        case KeyEvent.VK_W:
+        case KeyEvent.VK_UP:
+            selected--;
+            arrowy = (posy + G.WINDOWH / 4) + (selected * STEP);
             break;
         }
     }
