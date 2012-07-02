@@ -12,10 +12,11 @@ import java.util.Calendar;
 import javax.imageio.ImageIO;
 
 class StartScreen implements CameraDrawable, KeyListener {
-    public int           posx, posy;
+    public int           forx, fory;
+    public int           backx, backy;
     public int           arrowx, arrowy;
     public int           STEP     = 50;
-    public Artifact      back;
+    public BufferedImage back;
     public BufferedImage arrow;
     public BufferedImage fore;
     public boolean       anim_done;
@@ -24,11 +25,14 @@ class StartScreen implements CameraDrawable, KeyListener {
     public StartScreen() {
         makeBackground();
         makeForground();
-        posx = G.WINDOWW / 2 - fore.getWidth() / 2;
-        posy = G.WINDOWH;
+        forx = G.WINDOWW / 2 - fore.getWidth() / 2;
+        fory = G.WINDOWH;
 
-        arrowx = G.WINDOWW / 4;
-        arrowy = posy + G.WINDOWH / 4;
+        backx = 0;
+        backy = 0;
+
+        arrowx = G.WINDOWW / 4 + 22;
+        arrowy = fory + G.WINDOWH / 4;
     }
 
     public void makeBackground() {
@@ -45,7 +49,7 @@ class StartScreen implements CameraDrawable, KeyListener {
             double seconds = cal.get(Calendar.HOUR_OF_DAY) * 60 * 60
                     + cal.get(Calendar.MINUTE) * 60 + cal.get(Calendar.SECOND);
             // seconds = 19 * 60 * 60; //Used only for testing purposes.
-            // Represents 7:00 pm
+            // Represents 7:00 PM
             double secsinday = 24 * 60 * 60;
             int scalar = (int) (seconds / secsinday * bg.getWidth());
 
@@ -57,7 +61,7 @@ class StartScreen implements CameraDrawable, KeyListener {
             g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
                     .30f));
             g.fillRect(0, 0, back.getWidth(), back.getHeight());
-            this.back = new Artifact(0, 0, back);
+            this.back = back;
         } catch (IOException e) {
             System.out.println(e.getLocalizedMessage());
             G.GAMESTATE = G.State.PLAY;
@@ -75,17 +79,17 @@ class StartScreen implements CameraDrawable, KeyListener {
     }
 
     public void update() {
-        if (posy > G.WINDOWH / 2 - fore.getHeight() / 2) {
-            posy -= 5;
-            arrowy = (posy + G.WINDOWH / 4) + (selected * STEP);
+        if (fory > G.WINDOWH / 2 - fore.getHeight() / 2) {
+            fory -= 5;
+            arrowy = (fory + G.WINDOWH / 4) + (selected * STEP);
         }
     }
 
     @Override
     public ArrayList<Artifact> getArtifacts() {
         ArrayList<Artifact> tmp = new ArrayList<Artifact>(3);
-        tmp.add(back);
-        tmp.add(new Artifact(posx, posy, fore));
+        tmp.add(new Artifact(0, 0, back));
+        tmp.add(new Artifact(forx, fory, fore));
         tmp.add(new Artifact(arrowx, arrowy, arrow));
         return tmp;
     }
@@ -99,18 +103,26 @@ class StartScreen implements CameraDrawable, KeyListener {
         case KeyEvent.VK_RIGHT:
             if (selected == 0)
                 G.GAMESTATE = G.State.PLAY;
+            else if (selected == 1)
+                G.GAMESTATE = G.State.HOWTO;
+            else if (selected == 2)
+                G.GAMESTATE = G.State.CREDITS;
             break;
         case KeyEvent.VK_S:
         case KeyEvent.VK_K:
         case KeyEvent.VK_DOWN:
             selected++;
-            arrowy = (posy + G.WINDOWH / 4) + (selected * STEP);
+            if (selected > 2)
+                selected = 0;
+            arrowy = (fory + G.WINDOWH / 4) + (selected * STEP);
             break;
         case KeyEvent.VK_W:
         case KeyEvent.VK_I:
         case KeyEvent.VK_UP:
             selected--;
-            arrowy = (posy + G.WINDOWH / 4) + (selected * STEP);
+            if (selected < 0)
+                selected = 2;
+            arrowy = (fory + G.WINDOWH / 4) + (selected * STEP);
             break;
         }
     }

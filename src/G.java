@@ -20,7 +20,7 @@ class G {
     public static int         WINDOWH = 600;
 
     public enum State {
-        STARTUP, METAMAP, SELECT, PLAY, PAUSE, DEATH, CREDITS, END
+        STARTUP, METAMAP, SELECT, PLAY, PAUSE, DEATH, CREDITS, HOWTO, END, RESET
     };
 
     public static State GAMESTATE = State.STARTUP;

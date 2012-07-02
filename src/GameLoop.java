@@ -46,14 +46,20 @@ class GameLoop {
             case PAUSE:
                 break;
             case DEATH:
-                startset = levelset = false;
                 G.l.player.die();
-                G.GAMESTATE = G.State.STARTUP;
+                G.GAMESTATE = G.State.RESET;
                 break;
             case CREDITS:
+                G.GAMESTATE = G.State.RESET;
+                break;
+            case HOWTO:
+                G.GAMESTATE = G.State.RESET;
                 break;
             case END:
                 break;
+            case RESET:
+                startset = levelset = false;
+                G.GAMESTATE = G.State.STARTUP;
             }
             long endtime = System.currentTimeMillis();
 
