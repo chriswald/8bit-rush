@@ -87,6 +87,8 @@ class StartScreen implements CameraDrawable, KeyListener {
 
     @Override
     public ArrayList<Artifact> getArtifacts() {
+        this.update();
+
         ArrayList<Artifact> tmp = new ArrayList<Artifact>(3);
         tmp.add(new Artifact(0, 0, back));
         tmp.add(new Artifact(forx, fory, fore));
@@ -102,7 +104,7 @@ class StartScreen implements CameraDrawable, KeyListener {
         case KeyEvent.VK_L:
         case KeyEvent.VK_RIGHT:
             if (selected == 0)
-                G.GAMESTATE = G.State.PLAY;
+                G.GAMESTATE = G.State.SELECT;
             else if (selected == 1)
                 G.GAMESTATE = G.State.HOWTO;
             else if (selected == 2)

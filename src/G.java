@@ -19,6 +19,8 @@ class G {
     public static int         WINDOWW = 800;
     public static int         WINDOWH = 600;
 
+    public static boolean     done    = false;
+
     public enum State {
         STARTUP, METAMAP, SELECT, PLAY, PAUSE, DEATH, CREDITS, HOWTO, END, RESET
     };

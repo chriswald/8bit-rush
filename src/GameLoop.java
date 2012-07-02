@@ -8,7 +8,7 @@ class GameLoop {
         boolean startset = false;
         boolean addedlistener = false;
 
-        while (G.GAMESTATE != G.State.END) {
+        while (!G.done) {
             long starttime = System.currentTimeMillis();
             switch (G.GAMESTATE) {
             case STARTUP:
@@ -18,13 +18,13 @@ class GameLoop {
                     G.camera.setBufferSize(G.WINDOWW, G.WINDOWH);
                     startset = true;
                 }
-                G.ss.update();
                 G.camera.update(G.ss.getArtifacts());
-                G.camera.repaint();
                 break;
             case METAMAP:
+                G.GAMESTATE = G.State.PLAY;
                 break;
             case SELECT:
+                G.GAMESTATE = G.State.METAMAP;
                 break;
             case PLAY:
                 if (!levelset) {
@@ -41,7 +41,6 @@ class GameLoop {
 
                 G.camera.setPostition(G.l.player);
                 G.camera.update(G.l.getArtifacts());
-                G.camera.repaint();
                 break;
             case PAUSE:
                 break;
@@ -56,6 +55,7 @@ class GameLoop {
                 G.GAMESTATE = G.State.RESET;
                 break;
             case END:
+                G.done = true;
                 break;
             case RESET:
                 startset = levelset = false;
@@ -75,6 +75,5 @@ class GameLoop {
         }
 
         G.camera.dispose();
-        System.exit(0);
     }
 }

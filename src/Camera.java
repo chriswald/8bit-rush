@@ -66,6 +66,7 @@ class Camera extends JFrame implements KeyListener {
         for (Artifact a : artifacts) {
             gtod.drawImage(a.img, a.x, a.y, null);
         }
+        this.repaint();
     }
 
     @Override
@@ -80,6 +81,12 @@ class Camera extends JFrame implements KeyListener {
         case KeyEvent.VK_ESCAPE:
             G.GAMESTATE = G.State.END;
             break;
+        case KeyEvent.VK_P:
+        case KeyEvent.VK_PAUSE:
+            if (G.GAMESTATE == G.State.PLAY)
+                G.GAMESTATE = G.State.PAUSE;
+            else if (G.GAMESTATE == G.State.PAUSE)
+                G.GAMESTATE = G.State.PLAY;
         default:
             break;
         }
