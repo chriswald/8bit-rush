@@ -136,54 +136,58 @@ class Player extends Character implements CameraDrawable, KeyListener {
 
     @Override
     public void keyPressed(KeyEvent evt) {
-        switch (evt.getKeyCode()) {
-        case KeyEvent.VK_W:
-            up = true;
-            down = false;
-            break;
-        case KeyEvent.VK_D:
-            startMoveRight();
-            break;
-        case KeyEvent.VK_S:
-            down = true;
-            up = false;
-            break;
-        case KeyEvent.VK_A:
-            startMoveLeft();
-            break;
-        case KeyEvent.VK_SPACE:
-            space = true;
-            break;
-        case KeyEvent.VK_SHIFT:
-            MAXGROUNDSPEED = 7;
-            break;
-        default:
-            break;
+        if (G.GAMESTATE == G.State.PLAY) {
+            switch (evt.getKeyCode()) {
+            case KeyEvent.VK_W:
+                up = true;
+                down = false;
+                break;
+            case KeyEvent.VK_D:
+                startMoveRight();
+                break;
+            case KeyEvent.VK_S:
+                down = true;
+                up = false;
+                break;
+            case KeyEvent.VK_A:
+                startMoveLeft();
+                break;
+            case KeyEvent.VK_SPACE:
+                space = true;
+                break;
+            case KeyEvent.VK_SHIFT:
+                MAXGROUNDSPEED = 7;
+                break;
+            default:
+                break;
+            }
         }
     }
 
     @Override
     public void keyReleased(KeyEvent evt) {
-        switch (evt.getKeyCode()) {
-        case KeyEvent.VK_W:
-            up = false;
-            break;
-        case KeyEvent.VK_D:
-            endMoveRight();
-            break;
-        case KeyEvent.VK_S:
-            down = false;
-            break;
-        case KeyEvent.VK_A:
-            endMoveLeft();
-            break;
-        case KeyEvent.VK_SPACE:
-            space = false;
-            break;
-        case KeyEvent.VK_SHIFT:
-            MAXGROUNDSPEED = 5;
-        default:
-            break;
+        if (G.GAMESTATE == G.State.PLAY) {
+            switch (evt.getKeyCode()) {
+            case KeyEvent.VK_W:
+                up = false;
+                break;
+            case KeyEvent.VK_D:
+                endMoveRight();
+                break;
+            case KeyEvent.VK_S:
+                down = false;
+                break;
+            case KeyEvent.VK_A:
+                endMoveLeft();
+                break;
+            case KeyEvent.VK_SPACE:
+                space = false;
+                break;
+            case KeyEvent.VK_SHIFT:
+                MAXGROUNDSPEED = 5;
+            default:
+                break;
+            }
         }
     }
 
@@ -265,7 +269,7 @@ class Player extends Character implements CameraDrawable, KeyListener {
                 long starttime = System.currentTimeMillis();
                 this.posy += yvel;
                 yvel++;
-                G.camera.update(G.l.getArtifacts());
+                G.camera.update(G.l);
                 G.camera.repaint();
                 long endtime = System.currentTimeMillis();
 

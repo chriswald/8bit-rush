@@ -98,34 +98,35 @@ class StartScreen implements CameraDrawable, KeyListener {
 
     @Override
     public void keyPressed(KeyEvent evt) {
-        switch (evt.getKeyCode()) {
-        case KeyEvent.VK_SPACE:
-        case KeyEvent.VK_ENTER:
-        case KeyEvent.VK_L:
-        case KeyEvent.VK_RIGHT:
-            if (selected == 0)
-                G.GAMESTATE = G.State.SELECT;
-            else if (selected == 1)
-                G.GAMESTATE = G.State.HOWTO;
-            else if (selected == 2)
-                G.GAMESTATE = G.State.CREDITS;
-            break;
-        case KeyEvent.VK_S:
-        case KeyEvent.VK_K:
-        case KeyEvent.VK_DOWN:
-            selected++;
-            if (selected > 2)
+        if (G.GAMESTATE == G.State.STARTUP) {
+            switch (evt.getKeyCode()) {
+            case KeyEvent.VK_SPACE:
+            case KeyEvent.VK_ENTER:
+            case KeyEvent.VK_L:
+            case KeyEvent.VK_RIGHT:
+                if (selected == 0)
+                    G.GAMESTATE = G.State.SELECT;
+                else if (selected == 1)
+                    G.GAMESTATE = G.State.HOWTO;
+                else if (selected == 2)
+                    G.GAMESTATE = G.State.CREDITS;
                 selected = 0;
-            arrowy = (fory + G.WINDOWH / 4) + (selected * STEP);
-            break;
-        case KeyEvent.VK_W:
-        case KeyEvent.VK_I:
-        case KeyEvent.VK_UP:
-            selected--;
-            if (selected < 0)
-                selected = 2;
-            arrowy = (fory + G.WINDOWH / 4) + (selected * STEP);
-            break;
+                break;
+            case KeyEvent.VK_K:
+            case KeyEvent.VK_DOWN:
+                selected++;
+                if (selected > 2)
+                    selected = 0;
+                arrowy = (fory + G.WINDOWH / 4) + (selected * STEP);
+                break;
+            case KeyEvent.VK_I:
+            case KeyEvent.VK_UP:
+                selected--;
+                if (selected < 0)
+                    selected = 2;
+                arrowy = (fory + G.WINDOWH / 4) + (selected * STEP);
+                break;
+            }
         }
     }
 

@@ -1,3 +1,5 @@
+import java.awt.event.KeyListener;
+
 class GameLoop {
 
     public static void main(String[] args) {
@@ -18,7 +20,7 @@ class GameLoop {
                     G.camera.setBufferSize(G.WINDOWW, G.WINDOWH);
                     startset = true;
                 }
-                G.camera.update(G.ss.getArtifacts());
+                G.camera.update(G.ss);
                 break;
             case METAMAP:
                 G.GAMESTATE = G.State.PLAY;
@@ -40,7 +42,7 @@ class GameLoop {
                 G.l.checkCollide();
 
                 G.camera.setPostition(G.l.player);
-                G.camera.update(G.l.getArtifacts());
+                G.camera.update(G.l);
                 break;
             case PAUSE:
                 break;
@@ -59,6 +61,9 @@ class GameLoop {
                 break;
             case RESET:
                 startset = levelset = false;
+                for (KeyListener k : G.camera.getKeyListeners()) {
+                    G.camera.removeKeyListener(k);
+                }
                 G.GAMESTATE = G.State.STARTUP;
             }
             long endtime = System.currentTimeMillis();
@@ -74,6 +79,7 @@ class GameLoop {
             }
         }
 
+        System.out.println(G.camera.getKeyListeners().length);
         G.camera.dispose();
     }
 }
