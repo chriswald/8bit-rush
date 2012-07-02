@@ -1,5 +1,6 @@
+import java.awt.AlphaComposite;
 import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
@@ -43,18 +44,19 @@ class StartScreen implements CameraDrawable, KeyListener {
             Calendar cal = Calendar.getInstance();
             double seconds = cal.get(Calendar.HOUR_OF_DAY) * 60 * 60
                     + cal.get(Calendar.MINUTE) * 60 + cal.get(Calendar.SECOND);
-            // double seconds = 22 * 60 * 60;
+            // seconds = 19 * 60 * 60; //Used only for testing purposes.
+            // Represents 7:00 pm
             double secsinday = 24 * 60 * 60;
             int scalar = (int) (seconds / secsinday * bg.getWidth());
 
-            Graphics g = back.getGraphics();
+            Graphics2D g = (Graphics2D) back.getGraphics();
             Color sky = new Color(bg.getRGB(scalar, 0));
-            // Color haze = new Color(bg.getRGB(scalar, 1));
             g.setColor(sky);
             g.fillRect(0, 0, back.getWidth(), back.getHeight());
             g.drawImage(fg, 0, 0, null);
-            // g.setColor(haze);
-            // g.fillRect(0, 0, back.getWidth(), back.getHeight());
+            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
+                    .30f));
+            g.fillRect(0, 0, back.getWidth(), back.getHeight());
             this.back = new Artifact(0, 0, back);
         } catch (IOException e) {
             System.out.println(e.getLocalizedMessage());
@@ -93,15 +95,19 @@ class StartScreen implements CameraDrawable, KeyListener {
         switch (evt.getKeyCode()) {
         case KeyEvent.VK_SPACE:
         case KeyEvent.VK_ENTER:
+        case KeyEvent.VK_L:
+        case KeyEvent.VK_RIGHT:
             if (selected == 0)
                 G.GAMESTATE = G.State.PLAY;
             break;
         case KeyEvent.VK_S:
+        case KeyEvent.VK_K:
         case KeyEvent.VK_DOWN:
             selected++;
             arrowy = (posy + G.WINDOWH / 4) + (selected * STEP);
             break;
         case KeyEvent.VK_W:
+        case KeyEvent.VK_I:
         case KeyEvent.VK_UP:
             selected--;
             arrowy = (posy + G.WINDOWH / 4) + (selected * STEP);
