@@ -3,12 +3,14 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
-class Camera extends JFrame implements KeyListener {
+class Camera extends JFrame implements KeyListener, WindowListener {
     private static final long serialVersionUID = 1L;
 
     public BufferedImage      todraw;
@@ -61,18 +63,31 @@ class Camera extends JFrame implements KeyListener {
         todraw = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
     }
 
-    public void update(ArrayList<Artifact> artifacts) {
+    public void update(ArrayList<CameraDrawable> drawables) {
         Graphics gtod = todraw.getGraphics();
-        for (Artifact a : artifacts) {
-            gtod.drawImage(a.img, a.x, a.y, null);
-        }
+        for (CameraDrawable d : drawables)
+            for (Artifact a : d.getArtifacts()) {
+                gtod.drawImage(a.img, a.x, a.y, null);
+            }
         this.repaint();
+    }
+
+    public void update(CameraDrawable drawable) {
+        ArrayList<CameraDrawable> tmp = new ArrayList<CameraDrawable>(1);
+        tmp.add(drawable);
+        this.update(tmp);
     }
 
     @Override
     public void paint(Graphics g) {
         g.drawImage(todraw, 0, 0, G.WINDOWW, G.WINDOWH, posx, posy, posx
                 + G.WINDOWW, posy + G.WINDOWH, null);
+    }
+
+    @Override
+    public void removeKeyListener(KeyListener l) {
+        if (l != this)
+            super.removeKeyListener(l);
     }
 
     @Override
@@ -97,4 +112,33 @@ class Camera extends JFrame implements KeyListener {
 
     @Override
     public void keyTyped(KeyEvent arg0) {}
+
+    @Override
+    public void windowActivated(WindowEvent arg0) {
+        if (G.GAMESTATE == G.State.PAUSE)
+            G.GAMESTATE = G.State.PLAY;
+    }
+
+    @Override
+    public void windowClosed(WindowEvent arg0) {}
+
+    @Override
+    public void windowClosing(WindowEvent arg0) {
+        G.GAMESTATE = G.State.END;
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent arg0) {
+        if (G.GAMESTATE == G.State.PLAY)
+            G.GAMESTATE = G.State.PAUSE;
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent arg0) {}
+
+    @Override
+    public void windowIconified(WindowEvent arg0) {}
+
+    @Override
+    public void windowOpened(WindowEvent arg0) {}
 }
