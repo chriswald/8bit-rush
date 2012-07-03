@@ -26,8 +26,9 @@ class Camera extends JFrame implements KeyListener, WindowListener {
                 - G.WINDOWH / 2));
         this.setResizable(false);
         this.setTitle("8Bit-Rush");
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.addKeyListener(this);
+        this.addWindowListener(this);
     }
 
     public void setPostition(Player p) {
