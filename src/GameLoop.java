@@ -68,15 +68,7 @@ class GameLoop {
             }
             long endtime = System.currentTimeMillis();
 
-            try {
-                // To make sure updates are consistent subtract the time it took
-                // for the code to run from 1/30th of a second.
-                long sleeptime = (1000 / 30) - (endtime - starttime);
-                if (sleeptime > 0)
-                    Thread.sleep(sleeptime);
-            } catch (InterruptedException e) {
-                System.err.println(e.getLocalizedMessage());
-            }
+            G.rest(starttime, endtime);
         }
 
         System.out.println(G.camera.getKeyListeners().length);

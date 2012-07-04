@@ -259,27 +259,23 @@ class Player extends Character implements CameraDrawable, KeyListener {
 
     @Override
     public void die() {
-        try {
-            System.out.println("YOU DIED");
-            Thread.sleep(250);
+        System.out.println("YOU DIED");
+        G.rest(250);
 
-            // Give it a Mario-eque death sequence.
-            int yvel = -10;
-            while (posy < G.camera.posy + G.SCREENH) {
-                long starttime = System.currentTimeMillis();
-                this.posy += yvel;
-                yvel++;
-                G.camera.update(G.l);
-                G.camera.repaint();
-                long endtime = System.currentTimeMillis();
+        // Give it a Mario-eque death sequence.
+        int yvel = -10;
+        while (posy < G.camera.posy + G.SCREENH) {
+            long starttime = System.currentTimeMillis();
+            this.posy += yvel;
+            yvel++;
+            G.camera.update(G.l);
+            G.camera.repaint();
+            long endtime = System.currentTimeMillis();
 
-                long sleeptime = (1000 / 30) - (endtime - starttime);
-                if (sleeptime > 0)
-                    Thread.sleep(sleeptime);
-            }
+            G.rest(starttime, endtime);
+        }
 
-            Thread.sleep(500);
-        } catch (InterruptedException e) {}
+        G.rest(500);
         G.GAMESTATE = G.State.DEATH;
     }
 }

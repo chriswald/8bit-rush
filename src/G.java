@@ -26,4 +26,19 @@ class G {
     };
 
     public static State GAMESTATE = State.STARTUP;
+
+    public static void rest(long starttime, long endtime) {
+        // To make sure updates are consistent subtract the time it took
+        // for the code to run from 1/30th of a second.
+        G.rest((1000 / 30) - (endtime - starttime));
+    }
+
+    public static void rest(long millis) {
+        try {
+            if (millis > 0)
+                Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            System.err.println(e.getLocalizedMessage());
+        }
+    }
 }
